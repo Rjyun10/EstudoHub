@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculadora de Médias | EstudoHub</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.svg" />
+    <!-- Ajuste o caminho se necessário -->
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <!-- Seu CSS específico -->
+    <link rel="stylesheet" href="css/calculadora-medias.css" />
+    <link rel="stylesheet" href="css/timer.css" />
+    <link rel="stylesheet" href="css/root.css" />
+  </head>
+  <body class="bg-light">
+    <!-- Container da Navbar Dinâmica -->
+    <div id="navbar-container"></div>
+
+    <div class="container py-5">
+      <div class="row g-4 align-items-stretch">
+        <!-- Lado Esquerdo: Calculadora de Médias -->
+        <div class="col-lg-6">
+          <div
+            class="card border border-secondary-subtle shadow-sm rounded-4 p-4 h-100 bg-white"
+          >
+            <h4 class="fw-bold text-dark mb-3">
+              <i class="bi bi-calculator text-primary me-2"></i> Calculadora de
+              Médias
+            </h4>
+            <p class="text-muted small mb-4">
+              Insira os dados da sua disciplina para calcular a média ponderada
+              e descobrir quanto falta para atingir a meta.
+            </p>
+
+            <!-- Nome da Matéria para Salvar -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold small"
+                >Nome da Matéria / Disciplina</label
+              >
+              <input
+                type="text"
+                id="nome-materia-salvar"
+                class="form-control rounded-pill"
+                placeholder="Ex: Matemática Aplicada"
+              />
+            </div>
+
+            <!-- Configurações Iniciais -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold small"
+                >Média Mínima para Aprovação</label
+              >
+              <input
+                type="number"
+                id="media-minima"
+                class="form-control rounded-pill"
+                value="7.0"
+                step="0.1"
+              />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold small"
+                >Quantas avaliações/notas?</label
+              >
+              <input
+                type="number"
+                id="qtd-notas"
+                class="form-control rounded-pill"
+                value="2"
+                min="1"
+                max="10"
+                onchange="gerarCamposNotas()"
+              />
+            </div>
+
+            <!-- Container dinâmico de notas/pesos -->
+            <div id="container-inputs-notas" class="mb-3">
+              <!-- Gerado via JavaScript -->
+            </div>
+
+            <div class="d-flex gap-2">
+              <button
+                class="btn btn-primary w-50 rounded-pill fw-bold py-2"
+                onclick="calcularMedia()"
+              >
+                Calcular
+              </button>
+              <button
+                class="btn btn-success w-50 rounded-pill fw-bold py-2"
+                onclick="solicitarSalvarMedia()"
+              >
+                💾 Salvar Média
+              </button>
+            </div>
+
+            <!-- Resultado -->
+            <div
+              id="resultado-card"
+              class="d-none alert alert-secondary rounded-4 p-3 text-center mt-3"
+            >
+              <h5 class="fw-bold mb-1" id="texto-media-final">Média: 0.0</h5>
+              <p class="small mb-0" id="texto-status-falta">Calculando...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lado Direito: Calculadora Padrão e Científica -->
+        <div class="col-lg-6">
+          <div
+            class="card border border-secondary-subtle shadow-sm rounded-4 p-4 bg-white h-100"
+            id="card-calculadora"
+          >
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <h4 class="fw-bold text-dark m-0">
+                <i class="bi bi-calculator-fill text-primary me-2"></i>
+                Calculadora
+              </h4>
+
+              <!-- Alternador de Modos -->
+              <div class="btn-group btn-group-sm" role="group">
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="modoCalc"
+                  id="calcPadrao"
+                  checked
+                  onclick="window.alternarModoCalculadora('padrao')"
+                />
+                <label
+                  class="btn btn-outline-primary rounded-start-pill px-3"
+                  for="calcPadrao"
+                  >Padrão</label
+                >
+
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="modoCalc"
+                  id="calcCientifica"
+                  onclick="window.alternarModoCalculadora('cientifica')"
+                />
+                <label
+                  class="btn btn-outline-primary rounded-end-pill px-3"
+                  for="calcCientifica"
+                  >Científica</label
+                >
+              </div>
+            </div>
+
+            <!-- Visor Destaque -->
+            <div
+              class="bg-dark text-white p-3 rounded-4 mb-3 text-end shadow-inner"
+            >
+              <div
+                id="calc-operacao"
+                class="text-white-50 small"
+                style="min-height: 20px"
+              ></div>
+              <div id="calc-visor" class="fs-2 fw-bold text-truncate">0</div>
+            </div>
+
+            <!-- Teclas Científicas -->
+            <div id="teclado-cientifico" class="row g-2 mb-2 d-none">
+              <div class="col-3">
+                <button
+                  class="btn btn-secondary w-100 py-2 rounded-3 small fw-bold"
+                  onclick="window.inserirFuncao('sin')"
+                >
+                  sin
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-secondary w-100 py-2 rounded-3 small fw-bold"
+                  onclick="window.inserirFuncao('cos')"
+                >
+                  cos
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-secondary w-100 py-2 rounded-3 small fw-bold"
+                  onclick="window.inserirFuncao('tan')"
+                >
+                  tan
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-secondary w-100 py-2 rounded-3 small fw-bold"
+                  onclick="window.inserirFuncao('sqrt')"
+                >
+                  √
+                </button>
+              </div>
+
+              <div class="col-3">
+                <button
+                  class="btn btn-secondary w-100 py-2 rounded-3 small fw-bold"
+                  onclick="window.inserirOp('**')"
+                >
+                  x^y
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-secondary w-100 py-2 rounded-3 small fw-bold"
+                  onclick="window.inserirFuncao('log')"
+                >
+                  log
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-secondary w-100 py-2 rounded-3 small fw-bold"
+                  onclick="window.inserirNum('π')"
+                >
+                  π
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-secondary w-100 py-2 rounded-3 small fw-bold"
+                  onclick="window.inserirNum('e')"
+                >
+                  e
+                </button>
+              </div>
+            </div>
+
+            <!-- Teclado Padrão com Botões Estilizados -->
+            <div id="teclado-padrao" class="row g-2">
+              <!-- Botão C -->
+              <div class="col-3">
+                <button
+                  class="btn btn-danger-subtle border border-danger-subtle text-danger w-100 py-3 rounded-4 fw-bold shadow-sm"
+                  style="transition: all 0.2s ease-in-out"
+                  onmouseenter="
+                    this.style.setProperty(
+                      'background-color',
+                      '#dc3545',
+                      'important',
+                    );
+                    this.style.setProperty('color', '#ffffff', 'important');
+                    this.style.setProperty(
+                      'border-color',
+                      '#dc3545',
+                      'important',
+                    );
+                  "
+                  onmouseleave="
+                    this.style.removeProperty('background-color');
+                    this.style.removeProperty('color');
+                    this.style.removeProperty('border-color');
+                  "
+                  onclick="window.limparVisor()"
+                >
+                  C
+                </button>
+              </div>
+
+              <!-- Botão Apagar -->
+              <div class="col-3">
+                <button
+                  class="btn btn-warning-subtle border border-warning-subtle text-warning-emphasis w-100 py-3 rounded-4 fw-bold shadow-sm"
+                  style="transition: all 0.2s ease-in-out"
+                  onmouseenter="
+                    this.style.setProperty(
+                      'background-color',
+                      '#ffc107',
+                      'important',
+                    );
+                    this.style.setProperty('color', '#000000', 'important');
+                    this.style.setProperty(
+                      'border-color',
+                      '#ffc107',
+                      'important',
+                    );
+                  "
+                  onmouseleave="
+                    this.style.removeProperty('background-color');
+                    this.style.removeProperty('color');
+                    this.style.removeProperty('border-color');
+                  "
+                  onclick="window.apagarDigito()"
+                >
+                  <i class="bi bi-backspace-fill"></i>
+                </button>
+              </div>
+
+              <!-- Botão % -->
+              <div class="col-3">
+                <button
+                  class="btn btn-info-subtle border border-info-subtle text-info-emphasis w-100 py-3 rounded-4 fw-bold shadow-sm"
+                  style="transition: all 0.2s ease-in-out"
+                  onmouseenter="
+                    this.style.setProperty(
+                      'background-color',
+                      '#0dcaf0',
+                      'important',
+                    );
+                    this.style.setProperty('color', '#000000', 'important');
+                    this.style.setProperty(
+                      'border-color',
+                      '#0dcaf0',
+                      'important',
+                    );
+                  "
+                  onmouseleave="
+                    this.style.removeProperty('background-color');
+                    this.style.removeProperty('color');
+                    this.style.removeProperty('border-color');
+                  "
+                  onclick="window.inserirPorcentagem()"
+                >
+                  %
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-primary text-white w-100 py-3 rounded-4 fw-bold shadow-sm"
+                  onclick="window.inserirOp('/')"
+                >
+                  ÷
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-light border text-dark w-100 py-3 rounded-4 fw-bold shadow-sm"
+                  onclick="window.inserirNum('7')"
+                >
+                  7
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-light border text-dark w-100 py-3 rounded-4 fw-bold shadow-sm"
+                  onclick="window.inserirNum('8')"
+                >
+                  8
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-light border text-dark w-100 py-3 rounded-4 fw-bold shadow-sm"
+                  onclick="window.inserirNum('9')"
+                >
+                  9
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-primary text-white w-100 py-3 rounded-4 fw-bold shadow-sm"
+                  onclick="window.inserirOp('*')"
+                >
+                  ×
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-light border text-dark w-100 py-3 rounded-4 fw-bold shadow-sm"
+                  onclick="window.inserirNum('4')"
+                >
+                  4
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-light border text-dark w-100 py-3 rounded-4 fw-bold shadow-sm"
+                  onclick="window.inserirNum('5')"
+                >
+                  5
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-light border text-dark w-100 py-3 rounded-4 fw-bold shadow-sm"
+                  onclick="window.inserirNum('6')"
+                >
+                  6
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-primary text-white w-100 py-3 rounded-4 fw-bold shadow-sm"
+                  onclick="window.inserirOp('-')"
+                >
+                  -
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-light border text-dark w-100 py-3 rounded-4 fw-bold shadow-sm"
+                  onclick="window.inserirNum('1')"
+                >
+                  1
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-light border text-dark w-100 py-3 rounded-4 fw-bold shadow-sm"
+                  onclick="window.inserirNum('2')"
+                >
+                  2
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-light border text-dark w-100 py-3 rounded-4 fw-bold shadow-sm"
+                  onclick="window.inserirNum('3')"
+                >
+                  3
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-primary text-white w-100 py-3 rounded-4 fw-bold shadow-sm"
+                  onclick="window.inserirOp('+')"
+                >
+                  +
+                </button>
+              </div>
+              <div class="col-6">
+                <button
+                  class="btn btn-light border text-dark w-100 py-3 rounded-4 fw-bold shadow-sm"
+                  onclick="window.inserirNum('0')"
+                >
+                  0
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-light border text-dark w-100 py-3 rounded-4 fw-bold shadow-sm"
+                  onclick="window.inserirNum('.')"
+                >
+                  ,
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-success text-white w-100 py-3 rounded-4 fw-bold shadow-sm"
+                  style="transition: all 0.2s ease-in-out"
+                  onclick="window.calcularResultado()"
+                >
+                  =
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção das Médias Salvas (Largura total mantida abaixo) -->
+      <div class="row mt-4">
+        <div class="col-12">
+          <div
+            class="card border border-secondary-subtle shadow-sm rounded-4 p-4 bg-white"
+          >
+            <h5 class="fw-bold text-dark mb-3">
+              <i class="bi bi-journal-bookmark text-primary me-2"></i> Minhas
+              Médias Salvas
+            </h5>
+            <div id="container-medias-salvas" class="row g-3">
+              <div class="text-center text-muted py-3 small">
+                Carregando médias salvas...
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO -->
+    <div
+      class="modal fade"
+      id="modalConfirmarExclusao"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+          <div class="modal-header border-0 pb-0">
+            <h5 class="modal-title fw-bold text-dark">
+              <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+              Confirmar Exclusão
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="text-muted small mb-0">
+              Tem certeza de que deseja excluir esta média salva? Esta ação não
+              poderá ser desfeita.
+            </p>
+          </div>
+          <div class="modal-footer border-0 pt-0">
+            <button
+              type="button"
+              class="btn btn-light rounded-pill px-4"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger rounded-pill px-4"
+              onclick="confirmarExclusaoMedia()"
+            >
+              Sim, Excluir
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Scripts do Projeto -->
+    <script src="js/supabase-client.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/calculadora-medias.js"></script>
+    <script src="js/widget-timer.js"></script>
+  </body>
+</html>

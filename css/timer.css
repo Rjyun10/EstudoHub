@@ -1,0 +1,306 @@
+/* css/timer.css */
+
+/* Display do Timer */
+.display-timer {
+  background-color: var(--bg-color);
+  border-color: var(--border-color) !important;
+}
+
+/* Card e Containers */
+.card {
+  overflow: visible !important;
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+/* Dropdown Customizado */
+.custom-dropdown-wrapper {
+  position: relative;
+}
+
+.custom-dropdown-toggle {
+  background-color: var(--card-bg);
+  border: 1.5px solid var(--primary-color);
+  color: var(--primary-color);
+  border-radius: 0.85rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.custom-dropdown-toggle:hover,
+.custom-dropdown-toggle:focus {
+  background-color: var(--bg-color);
+  border-color: var(--primary-hover);
+  color: var(--primary-hover);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-chevron {
+  font-size: 0.75rem;
+  transition: transform 0.2s ease;
+}
+
+.dropdown-chevron.rodado {
+  transform: rotate(180deg);
+}
+
+/* Menu Dropdown Flutuante */
+.custom-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1050 !important;
+  background-color: var(--card-bg);
+  border-radius: 1rem !important;
+  margin-top: 6px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid var(--border-color);
+  list-style: none;
+}
+
+.custom-dropdown-item {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--text-color);
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.custom-dropdown-item:hover,
+.custom-dropdown-item:focus {
+  background-color: var(--bg-color);
+  color: var(--primary-color);
+}
+
+.custom-dropdown-item.active,
+.custom-dropdown-item:active {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+/* Card Widget Flutuante */
+#widget-timer-flutuante {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 99999;
+  width: 260px;
+  background: var(--card-bg) !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid var(--border-color) !important;
+  overflow: hidden;
+  user-select: none;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+#widget-timer-flutuante .widget-header {
+  background-color: var(--bg-color);
+  padding: 8px 12px;
+  cursor: grab;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#widget-timer-flutuante .widget-header:active {
+  cursor: grabbing;
+}
+
+#widget-timer-flutuante .widget-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--card-bg);
+}
+
+#widget-timer-flutuante .widget-tempo {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  line-height: 1.1;
+  margin-top: 4px;
+}
+
+#widget-timer-flutuante .widget-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 12px;
+  background-color: var(--bg-color);
+  color: var(--primary-color);
+  border: 1px solid var(--border-color);
+}
+
+#widget-timer-flutuante .widget-btn-abrir {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: #ffffff !important;
+  text-decoration: none !important;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 6px 16px;
+  border-radius: 20px;
+  transition: background-color 0.2s ease;
+}
+
+#widget-timer-flutuante .widget-btn-abrir:hover {
+  background-color: var(--primary-hover);
+}
+
+.custom-dropdown-menu.show {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 100000 !important;
+}
+
+/* Grade do Calendário */
+.grid-calendario-semana,
+.grid-calendario-dias {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.dia-card {
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px;
+  padding: 6px;
+  background-color: var(--card-bg);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.dia-card:hover {
+  background-color: var(--bg-color);
+  border-color: var(--primary-color) !important;
+  transform: translateY(-2px);
+}
+
+.dia-card.hoje {
+  border: 2px solid var(--primary-color) !important;
+  background-color: var(--bg-color);
+}
+
+.dia-vazio {
+  aspect-ratio: 1 / 1;
+  background-color: var(--bg-color);
+  border-radius: 8px;
+  opacity: 0.4;
+}
+
+.btn-add-icone {
+  font-size: 0.9rem;
+  line-height: 1;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.dia-card:hover .btn-add-icone {
+  background-color: var(--primary-color);
+  color: #ffffff !important;
+}
+
+.x-small {
+  font-size: 0.65rem !important;
+  padding: 2px 5px !important;
+}
+
+/* Tabela de Técnicas */
+.style-tecnicas-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.style-tecnicas-table thead th {
+  background-color: var(--bg-color);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-weight: 700;
+  border-bottom: 2px solid var(--border-color);
+  padding: 10px 12px;
+}
+
+.style-tecnicas-table tbody td {
+  background-color: var(--card-bg) !important;
+  border-top: 1px solid var(--border-color) !important;
+  padding: 12px;
+  border-bottom: 1px solid var(--border-color)  !important;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--text-color);
+}
+
+.style-tecnicas-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.style-tecnicas-table tbody tr:hover {
+  background-color: var(--bg-color);
+}
+
+.card .table-responsive {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Sobrescreve a classe bg-white do Bootstrap e ajusta as tabelas internas */
+.card.bg-white,
+.card.bg-white .table,
+.card.bg-white .table th,
+.card.bg-white .table td {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Garante que o texto secundário (ex: nomes dos métodos) fique legível no Dark Mode */
+.card.bg-white .text-secondary {
+  color: var(--text-muted) !important;
+}
+
+/* 1. Fundo, texto e bordas do container principal do modal */
+.modal-content {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* 2. Títulos e cabeçalhos do modal */
+.modal-title, 
+.modal-header h5 {
+  color: var(--text-color) !important;
+}
+
+/* 3. Ajuste do select (<select class="form-select">) dentro do modal */
+.modal-content .form-select {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* 4. Cor do botão de fechar (X) para ficar visível em temas escuros */
+[data-theme="dark"] .btn-close,
+[data-theme="cyberpunk"] .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}

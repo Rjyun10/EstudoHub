@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EstudoHub - Entrar ou Cadastrar</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="css/root.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="bg-light d-flex align-items-center min-vh-100 py-4">
+    <div class="container" style="max-width: 450px">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <!-- Cabeçalho -->
+          <div class="text-center mb-4">
+            <h2 class="fw-bold text-primary">EstudoHub</h2>
+            <p class="text-muted small">
+              Seu portal acadêmico e de apoio mútuo
+            </p>
+          </div>
+
+          <div id="msg-alerta"></div>
+
+          <!-- Abas -->
+          <ul
+            class="nav nav-pills nav-justified mb-4"
+            id="authTab"
+            role="tablist"
+          >
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link active"
+                id="login-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#login-pane"
+                type="button"
+                role="tab"
+              >
+                Login
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                id="cadastro-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#cadastro-pane"
+                type="button"
+                role="tab"
+              >
+                Cadastrar
+              </button>
+            </li>
+          </ul>
+
+          <div class="tab-content" id="authTabContent">
+            <!-- LOGIN -->
+            <div
+              class="tab-pane fade show active"
+              id="login-pane"
+              role="tabpanel"
+            >
+              <form id="form-login">
+                <div class="mb-3">
+                  <label class="form-label">E-mail</label>
+                  <input
+                    type="email"
+                    id="login-email"
+                    class="form-control"
+                    placeholder="seu@email.com"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Senha</label>
+                  <input
+                    type="password"
+                    id="login-senha"
+                    class="form-control"
+                    placeholder="******"
+                    required
+                  />
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2">
+                  Entrar
+                </button>
+              </form>
+            </div>
+
+            <!-- CADASTRO -->
+            <div class="tab-pane fade" id="cadastro-pane" role="tabpanel">
+              <form id="form-cadastro">
+                <div class="mb-3">
+                  <label class="form-label">Nome Completo</label>
+                  <input
+                    type="text"
+                    id="cad-nome"
+                    class="form-control"
+                    placeholder="Ex: Maria Silva"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">E-mail</label>
+                  <input
+                    type="email"
+                    id="cad-email"
+                    class="form-control"
+                    placeholder="seu@email.com"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Senha</label>
+                  <input
+                    type="password"
+                    id="cad-senha"
+                    class="form-control"
+                    placeholder="Mínimo 6 caracteres"
+                    minlength="6"
+                    required
+                  />
+                </div>
+
+                <!-- Aceites LGPD -->
+                <div class="mb-3 form-check">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="cad-termos"
+                    required
+                  />
+                  <label class="form-check-label small" for="cad-termos">
+                    Li e aceito os
+                    <a
+                      href="termos.html#termos"
+                      target="_blank"
+                      class="text-decoration-none"
+                      >Termos de Uso</a
+                    >,
+                    <a
+                      href="termos.html#privacidade"
+                      target="_blank"
+                      class="text-decoration-none"
+                      >Política de Privacidade</a
+                    >
+                    e
+                    <a
+                      href="termos.html#cookies"
+                      target="_blank"
+                      class="text-decoration-none"
+                      >Cookies</a
+                    >.
+                  </label>
+                </div>
+
+                <!-- Notificações desabilitada (impossibilitada de clique) -->
+                <div class="mb-3 form-check">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="cad-marketing"
+                    disabled
+                  />
+                  <label
+                    class="form-check-label small text-muted"
+                    for="cad-marketing"
+                  >
+                    Desejo receber avisos sobre grupos de estudo e novidades (em
+                    breve).
+                  </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2">
+                  Criar Conta
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/auth.js"></script>
+
+    <script>
+      window.mostrarMensagemTela = function (mensagem, tipo = "danger") {
+        const container = document.getElementById("msg-alerta");
+        if (!container) return;
+
+        const icone =
+          tipo === "success"
+            ? "bi-check-circle-fill"
+            : "bi-exclamation-triangle-fill";
+
+        container.innerHTML = `
+          <div class="alert alert-${tipo} alert-dismissible fade show rounded-3 shadow-sm d-flex align-items-center gap-2 py-2 px-3 mb-3" role="alert">
+            <i class="bi ${icone} fs-5"></i>
+            <div class="small fw-medium">${mensagem}</div>
+            <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        `;
+      };
+
+      document
+        .querySelectorAll('button[data-bs-toggle="tab"]')
+        .forEach((tab) => {
+          tab.addEventListener("shown.bs.tab", () => {
+            const container = document.getElementById("msg-alerta");
+            if (container) container.innerHTML = "";
+          });
+        });
+
+      // Login Event Listener
+      document
+        .getElementById("form-login")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const email = document.getElementById("login-email").value.trim();
+          const senha = document.getElementById("login-senha").value;
+
+          if (!email || !senha) {
+            mostrarMensagemTela(
+              "Por favor, preencha o e-mail e a senha.",
+              "warning",
+            );
+            return;
+          }
+
+          if (typeof window.fazerLogin === "function") {
+            await window.fazerLogin(email, senha);
+          } else {
+            mostrarMensagemTela(
+              "Erro interno: Script de autenticação não encontrado.",
+              "danger",
+            );
+          }
+        });
+
+      // Cadastro Event Listener com Validação LGPD
+      document
+        .getElementById("form-cadastro")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const nome = document.getElementById("cad-nome").value.trim();
+          const email = document.getElementById("cad-email").value.trim();
+          const senha = document.getElementById("cad-senha").value;
+          const aceitouTermos = document.getElementById("cad-termos").checked;
+          const aceitouMarketing =
+            document.getElementById("cad-marketing").checked;
+
+          if (!nome || !email || !senha) {
+            mostrarMensagemTela(
+              "Por favor, preencha todos os campos do cadastro.",
+              "warning",
+            );
+            return;
+          }
+
+          if (!aceitouTermos) {
+            mostrarMensagemTela(
+              "Você precisa aceitar os Termos e Políticas para criar uma conta.",
+              "warning",
+            );
+            return;
+          }
+
+          if (senha.length < 6) {
+            mostrarMensagemTela(
+              "A senha deve ter no mínimo 6 caracteres.",
+              "warning",
+            );
+            return;
+          }
+
+          if (typeof window.cadastrarUsuario === "function") {
+            await window.cadastrarUsuario(email, senha, nome, {
+              aceitouMarketing,
+            });
+          } else {
+            mostrarMensagemTela(
+              "Erro interno: Script de cadastro não encontrado.",
+              "danger",
+            );
+          }
+        });
+    </script>
+  </body>
+</html>

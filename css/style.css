@@ -1,0 +1,170 @@
+/* css/style.css */
+
+/* Esconde a navbar mobile na tela grande */
+.mobile-bottom-nav {
+  display: none;
+}
+
+/* Smartphones (<768px) */
+@media (max-width: 767.98px) {
+  .desktop-navbar {
+    display: none !important;
+  }
+
+  body {
+    padding-bottom: 70px;
+  }
+
+  .mobile-bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background-color: var(--card-bg);
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    z-index: 1050;
+  }
+
+  .mobile-bottom-nav .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 500;
+    flex: 1;
+  }
+
+  .mobile-bottom-nav .nav-item.active {
+    color: var(--primary-color);
+  }
+
+  .mobile-bottom-nav .nav-icon {
+    font-size: 1.25rem;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+}
+
+/* Animação do Menu Dropdown */
+.dropdown-menu {
+  display: block;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease-in-out;
+  transform: translateY(10px);
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+.dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-custom-btn,
+.dropdown-custom-btn #feedback-tipo-label,
+.dropdown-menu .dropdown-item {
+  color: var(--text-color) !important;
+  font-weight: 500;
+}
+
+.dropdown-custom-btn:hover,
+.dropdown-custom-btn:focus,
+.dropdown-custom-btn:active,
+.dropdown-custom-btn.show {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-color) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background-color: var(--bg-color) !important;
+  color: var(--primary-color) !important;
+}
+
+.dropdown-menu .dropdown-item.active,
+.dropdown-menu .dropdown-item:active {
+  background-color: var(--primary-color) !important;
+  color: #ffffff !important;
+}
+/* Estiliza o botão interno do input type="file" */
+.form-control::file-selector-button {
+  background-color: var(--primary-color) !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 0.375rem 0.75rem !important;
+  margin-right: 0.75rem !important;
+  border-radius: 0.375rem !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease-in-out !important;
+}
+
+/* Efeito ao passar o mouse por cima (Hover) */
+.form-control::file-selector-button:hover {
+  background-color: var(--primary-hover) !important;
+}
+
+/* Suporte para navegadores mais antigos baseados em WebKit */
+.form-control::-webkit-file-upload-button {
+  background-color: var(--primary-color) !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 0.375rem 0.75rem !important;
+  margin-right: 0.75rem !important;
+  border-radius: 0.375rem !important;
+  cursor: pointer !important;
+}
+
+
+/* Caso seja um botão com classe personalizada ou ícone dentro */
+.btn-danger:hover, 
+button:has(.bi-trash):hover {
+  background-color: #b91c1c !important; /* Cor de fundo no hover */
+  border-color: #b91c1c !important;
+}
+
+/* Container do Grupo de Filtros */
+.feed-filter-group {
+  background-color: var(--card-bg, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 9999px;
+  padding: 4px;
+  display: inline-flex;
+  gap: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Estado Geral dos Botões (Inativo) */
+.feed-filter-group .btn-filter {
+  border: none !important;
+  border-radius: 9999px !important;
+  color: var(--text-muted, #64748b) !important;
+  background-color: transparent !important;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.4rem 1.1rem;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover no botão inativo */
+.feed-filter-group .btn-filter:hover:not(.active) {
+  color: var(--text-color, #1e293b) !important;
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Estado ATIVO (Sólido e Fixo) */
+.feed-filter-group .btn-filter.active {
+  background-color: var(--primary-color, #3b82f6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}

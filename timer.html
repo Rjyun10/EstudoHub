@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Timer & Estudo - EstudoHub</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/timer.css" />
+    <link rel="stylesheet" href="css/root.css" />
+
+  </head>
+  <body class="bg-light">
+    <!-- Navbar Dinâmica -->
+    <div id="navbar-container"></div>
+
+    <div class="container py-4">
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+          <h2 class="fw-bold text-dark m-0">⏱️ Timer & Foco</h2>
+          <p class="text-muted m-0">
+            Gerencie seus tempos de estudo, pausas e rotina semanal.
+          </p>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <!-- COLUNA DA ESQUERDA: CONTROLE DO TIMER -->
+        <div class="col-lg-5">
+          <div
+            class="card border border-secondary-subtle shadow-sm rounded-4 p-4 text-center bg-white"
+          >
+            <h5 class="fw-bold mb-3 text-secondary">Temporizador</h5>
+
+            <!-- Dropdown Customizado Moderno -->
+            <!-- Dropdown Customizado Funcional Nativo -->
+            <div class="mb-3 position-relative">
+              <label class="form-label small fw-bold text-muted"
+                >Selecione o Modo</label
+              >
+
+              <div class="custom-dropdown-wrapper">
+                <button
+                  class="btn custom-dropdown-toggle w-100 d-flex align-items-center justify-content-between px-3 py-2 fw-semibold"
+                  type="button"
+                  id="dropdownTimerBtn"
+                  onclick="toggleDropdownTimer(event)"
+                >
+                  <span id="label-modo-selecionado"
+                    >Pomodoro Tradicional (25m / 5m)</span
+                  >
+                  <span class="dropdown-chevron" id="dropdownChevron">▼</span>
+                </button>
+
+                <ul
+                  class="custom-dropdown-menu w-100 p-2 shadow-sm border-0 rounded-4 d-none"
+                  id="menuDropdownTimer"
+                >
+                  <li>
+                    <button
+                      class="dropdown-item custom-dropdown-item rounded-3 py-2 text-center"
+                      type="button"
+                      onclick="
+                        selecionarPresetDropdown(
+                          '25-5',
+                          'Pomodoro Tradicional (25m / 5m)',
+                        )
+                      "
+                    >
+                      Pomodoro Tradicional (25m / 5m)
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      class="dropdown-item custom-dropdown-item rounded-3 py-2 text-center"
+                      type="button"
+                      onclick="
+                        selecionarPresetDropdown(
+                          '50-10',
+                          'Foco Profundo (50m / 10m)',
+                        )
+                      "
+                    >
+                      Foco Profundo (50m / 10m)
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      class="dropdown-item custom-dropdown-item rounded-3 py-2 text-center"
+                      type="button"
+                      onclick="
+                        selecionarPresetDropdown(
+                          '30-10-20',
+                          'Regra 30/10/20 (30m / 10m)',
+                        )
+                      "
+                    >
+                      Regra 30/10/20 (30m / 10m)
+                    </button>
+                  </li>
+                  <li><hr class="dropdown-divider my-1" /></li>
+                  <li>
+                    <button
+                      class="dropdown-item custom-dropdown-item rounded-3 py-2 text-center text-primary fw-bold"
+                      type="button"
+                      onclick="
+                        selecionarPresetDropdown('custom', 'Personalizado')
+                      "
+                    >
+                      Personalizado
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
+              <input type="hidden" id="timer-modo-preset" value="25-5" />
+            </div>
+
+            <!-- Display do Timer -->
+            <div class="display-timer my-3 py-3 rounded-4 bg-light border">
+              <span id="display-tempo" class="display-3 fw-bold text-primary"
+                >25:00</span
+              >
+              <div id="display-fase" class="text-muted fw-semibold small mt-1">
+                Fase: Foco 🎯
+              </div>
+            </div>
+
+            <!-- Configuração Manual de Minutos -->
+            <div class="row g-2 mb-4">
+              <div class="col-6">
+                <label class="form-label small text-muted">Estudo (min)</label>
+                <input
+                  type="number"
+                  id="input-min-estudo"
+                  class="form-control text-center rounded-3"
+                  value="25"
+                  min="1"
+                  oninput="marcarComoPersonalizado()"
+                />
+              </div>
+              <div class="col-6">
+                <label class="form-label small text-muted">Pausa (min)</label>
+                <input
+                  type="number"
+                  id="input-min-pausa"
+                  class="form-control text-center rounded-3"
+                  value="5"
+                  min="1"
+                  oninput="marcarComoPersonalizado()"
+                />
+              </div>
+            </div>
+
+            <!-- Controles do Timer -->
+            <div class="d-flex gap-2">
+              <button
+                id="btn-iniciar"
+                class="btn btn-primary w-100 py-2 fw-bold rounded-3"
+                onclick="iniciarTimer()"
+              >
+                ▶️ Iniciar
+              </button>
+              <button
+                id="btn-pausar"
+                class="btn btn-warning w-100 py-2 fw-bold rounded-3 d-none"
+                onclick="pausarTimer()"
+              >
+                ⏸️ Pausar
+              </button>
+              <button
+                class="btn btn-outline-secondary py-2 fw-bold rounded-3"
+                onclick="resetarTimer()"
+              >
+                🔄 Reset
+              </button>
+            </div>
+          </div>
+
+          <!-- Tabela Informativa de Técnicas de Aprendizado -->
+          <div
+            class="card border border-secondary-subtle shadow-sm rounded-4 p-3 mt-3 bg-white"
+          >
+            <div class="d-flex align-items-center mb-3">
+              <span class="fs-5 me-2">🧠</span>
+              <h6 class="fw-bold text-dark m-0">
+                Técnicas e Conceitos de Estudo
+              </h6>
+            </div>
+
+            <div class="table-responsive">
+              <table
+                class="table align-middle mb-0 text-start style-tecnicas-table"
+              >
+                <thead>
+                  <tr>
+                    <th scope="col" style="width: 32%">Conceito</th>
+                    <th scope="col" style="width: 68%">
+                      Como Funciona / Aplicação
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="fw-bold text-dark">Primeiros Princípios</td>
+                    <td class="text-secondary small">
+                      Desconstrói um problema até suas verdades fundamentais e
+                      reconstrói o conhecimento do zero, evitando memorização
+                      superficial.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="fw-bold text-dark">Estado de Flow</td>
+                    <td class="text-secondary small">
+                      Estado de imersão total onde o desafio é equilibrado com
+                      sua habilidade, eliminando distrações e maximizando o
+                      foco.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="fw-bold text-dark">Palácio da Memória</td>
+                    <td class="text-secondary small">
+                      Técnica mnemônica que associa informações a locais físicos
+                      conhecidos (como sua casa) para facilitar o resgate de
+                      dados.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- COLUNA DA DIREITA: TÉCNICAS E CRONOGRAMA -->
+        <div class="col-lg-7">
+          <div
+            class="card border border-secondary-subtle shadow-sm rounded-4 p-4 text-center bg-white mb-4"
+          >
+            <h5 class="fw-bold mb-3 text-secondary">
+              💡 Métodos e Estratégias de Estudo
+            </h5>
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>Método</th>
+                    <th>Ciclo / Estrutura</th>
+                    <th>Ação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="fw-bold text-dark">Pomodoro</td>
+                    <td>25 min Foco + 5 min Pausa</td>
+                    <td>
+                      <button
+                        class="btn btn-sm btn-outline-primary rounded-pill px-3"
+                        onclick="
+                          carregarPresetTabela(
+                            25,
+                            5,
+                            '25-5',
+                            'Pomodoro Tradicional (25m / 5m)',
+                          )
+                        "
+                      >
+                        Usar
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="fw-bold text-dark">50/10 (Ultra)</td>
+                    <td>50 min Foco + 10 min Pausa</td>
+                    <td>
+                      <button
+                        class="btn btn-sm btn-outline-primary rounded-pill px-3"
+                        onclick="
+                          carregarPresetTabela(
+                            50,
+                            10,
+                            '50-10',
+                            'Foco Profundo (50m / 10m)',
+                          )
+                        "
+                      >
+                        Usar
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="fw-bold text-dark">Método 30-10-20</td>
+                    <td>30 min Foco + 10 min Pausa</td>
+                    <td>
+                      <button
+                        class="btn btn-sm btn-outline-primary rounded-pill px-3"
+                        onclick="
+                          carregarPresetTabela(
+                            30,
+                            10,
+                            '30-10-20',
+                            'Regra 30/10/20 (30m / 10m)',
+                          )
+                        "
+                      >
+                        Usar
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div
+            class="card border border-secondary-subtle shadow-sm rounded-4 p-4"
+          >
+            <!-- Cabeçalho com Navegação de Mês/Ano -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <button
+                class="btn btn-light border rounded-3 px-3 py-1 fw-bold text-dark"
+                onclick="mudarMes(-1)"
+              >
+                &larr; Anterior
+              </button>
+              <h5 class="fw-bold text-dark m-0 fs-4" id="cal-titulo-mes-ano">
+                ---
+              </h5>
+              <button
+                class="btn btn-light border rounded-3 px-3 py-1 fw-bold text-dark"
+                onclick="mudarMes(1)"
+              >
+                Próximo &rarr;
+              </button>
+            </div>
+
+            <!-- Cabeçalho com Dias da Semana -->
+            <div class="grid-calendario-container">
+              <div
+                class="grid-calendario-semana fw-bold text-secondary text-center mb-2"
+              >
+                <div>Dom</div>
+                <div>Seg</div>
+                <div>Ter</div>
+                <div>Qua</div>
+                <div>Qui</div>
+                <div>Sex</div>
+                <div>Sáb</div>
+              </div>
+
+              <!-- Grade dos Dias (7 Colunas Fixas) -->
+              <div id="grid-calendario-mes" class="grid-calendario-dias"></div>
+            </div>
+          </div>
+
+          <!-- Modal para Gerenciar Metas e Provas -->
+          <!-- Modal para Gerenciar Metas e Provas -->
+          <div
+            class="modal fade"
+            id="modalCalendarioDia"
+            tabindex="-1"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content border-0 shadow rounded-4">
+                <div class="modal-header border-0 pb-0">
+                  <h5 class="modal-title fw-bold">
+                    Compromissos de
+                    <span id="modalDataTitulo" class="text-primary"></span>
+                  </h5>
+                  <!-- Botão X atualizado com onclick explicito -->
+                  <button
+                    type="button"
+                    class="btn-close"
+                    onclick="fecharModalDia()"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <div
+                    id="modalListaEstudos"
+                    class="d-flex flex-column gap-2 mb-3"
+                  ></div>
+
+                  <form
+                    id="form-estudo-modal"
+                    onsubmit="salvarEstudoCalendario(event)"
+                  >
+                    <div class="row g-2">
+                      <div class="col-4">
+                        <select id="select-tipo-item" class="form-select">
+                          <option value="meta">📌 Meta</option>
+                          <option value="prova">🚨 Prova</option>
+                        </select>
+                      </div>
+                      <div class="col-8">
+                        <input
+                          type="text"
+                          id="input-nova-materia-cal"
+                          class="form-control"
+                          placeholder="Ex: Prova de História / Ler cap. 3"
+                          required
+                        />
+                      </div>
+                      <div class="col-12">
+                        <button
+                          type="button"
+                          class="btn btn-primary w-100 fw-bold"
+                          onclick="salvarEstudoCalendario(event)"
+                        >
+                          + Adicionar ao Calendário
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/bootstrap.bundle.min.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/widget-timer.js"></script>
+  </body>
+</html>

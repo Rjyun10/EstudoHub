@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EstudoHub - Meu Perfil</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="css/root.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/timer.css">
+  </head>
+  <body class="bg-light">
+    <div id="navbar-container"></div>
+
+    <div class="container py-4" style="max-width: 800px">
+      <!-- Card Principal do Perfil -->
+      <div class="card border border-secondary-subtle shadow-sm rounded-4 text-center p-4 mb-4">
+        <!-- Container Avatar / Foto -->
+        <div class="d-flex justify-content-center mb-3">
+          <div
+            id="perfil-foto-container"
+            class="rounded-circle bg-secondary-subtle d-flex align-items-center justify-content-center shadow-sm overflow-hidden"
+            style="width: 100px; height: 100px"
+          >
+            <i
+              id="perfil-foto-icone"
+              class="bi bi-person-fill text-secondary display-4"
+            ></i>
+            <img
+              id="perfil-foto-img"
+              src=""
+              class="w-100 h-100 object-fit-cover d-none"
+              alt="Foto de perfil"
+            />
+          </div>
+        </div>
+
+        <h4 class="fw-bold m-0" id="perfil-nome">Carregando...</h4>
+        <small class="text-primary fw-semibold d-none" id="perfil-username"
+          >@usuario</small
+        >
+
+        <p class="text-muted small my-2" id="perfil-bio">...</p>
+
+        <div
+          class="d-flex justify-content-center gap-2 mb-3 flex-wrap align-items-center"
+        >
+          <span
+            class="badge bg-light text-dark border rounded-pill px-3 py-2"
+            id="perfil-curso"
+          >
+            <i class="bi bi-mortarboard me-1"></i> Curso não informado
+          </span>
+          <span
+            class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2"
+            id="perfil-meta"
+          >
+            🎯 Meta: Não definida
+          </span>
+          <a
+            id="perfil-insta-link"
+            href="#"
+            target="_blank"
+            class="badge bg-danger-subtle text-danger text-decoration-none rounded-pill px-3 py-2 d-none"
+          >
+            <i class="bi bi-instagram me-1"></i
+            ><span id="perfil-insta">@instagram</span>
+          </a>
+        </div>
+
+        <!-- Botão Editar Perfil -->
+        <div class="d-flex justify-content-center mb-2">
+          <button
+            class="btn btn-outline-primary btn-sm rounded-pill px-4 fw-bold"
+            data-bs-toggle="modal"
+            data-bs-target="#modalEditarPerfil"
+          >
+            <i class="bi bi-pencil-square me-1"></i> Editar Perfil
+          </button>
+        </div>
+
+        <hr class="opacity-25 my-3" />
+
+        <!-- Contadores de Conexões e Publicações -->
+        <div class="row text-center">
+          <div
+            class="col-4 border-end"
+            onclick="alternarAba('publicacoes')"
+          >
+            <h5 class="fw-bold m-0" id="qtd-publicacoes">0</h5>
+            <small class="text-muted">Publicações</small>
+          </div>
+          <div
+            class="col-4 border-end"
+            style="cursor: pointer"
+            onclick="abrirModalConexoes('seguidores')"
+          >
+            <h5 class="fw-bold m-0" id="qtd-seguidores">0</h5>
+            <small class="text-muted">Seguidores</small>
+          </div>
+          <div
+            class="col-4"
+            style="cursor: pointer"
+            onclick="abrirModalConexoes('seguindo')"
+          >
+            <h5 class="fw-bold m-0" id="qtd-seguindo">0</h5>
+            <small class="text-muted">Seguindo</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Abas (Minhas Publicações x Minhas Vitórias) -->
+      <ul
+        class="nav nav-pills nav-fill bg-white p-1 rounded-4 shadow-sm mb-4"
+        id="pills-tab"
+      >
+        <li class="nav-item">
+          <button
+            class="nav-link active rounded-pill fw-bold"
+            id="tab-publicacoes"
+            onclick="alternarAba('publicacoes')"
+          >
+            <i class="bi bi-journal-bookmark me-1"></i> Minhas Publicações
+          </button>
+        </li>
+        <li class="nav-item">
+          <button
+            class="nav-link rounded-pill fw-bold"
+            id="tab-vitorias"
+            onclick="alternarAba('vitorias')"
+          >
+            <i class="bi bi-trophy me-1"></i> Minhas Vitórias 🎉
+          </button>
+        </li>
+      </ul>
+
+      <!-- Containers de Conteúdo -->
+      <div id="conteudo-publicacoes" class="row g-3"></div>
+      <div id="conteudo-vitorias" class="d-flex flex-column gap-3 d-none"></div>
+    </div>
+
+    <!-- Modal Editar Perfil -->
+    <div
+      class="modal fade"
+      id="modalEditarPerfil"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border border-secondary-subtle shadow-lg rounded-4">
+          <div class="modal-header border-0 pb-0">
+            <h5 class="modal-title fw-bold">Editar Perfil</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Fechar"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="form-editar-perfil">
+              <!-- Campo de Upload de Foto de Perfil -->
+              <div class="mb-3">
+                <label class="form-label small fw-bold">Foto de Perfil</label>
+                <input
+                  type="file"
+                  id="edit-avatar-file"
+                  class="form-control rounded-3"
+                  accept="image/*"
+                />
+                <input type="hidden" id="edit-avatar-url" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold">Nome</label>
+                <input
+                  type="text"
+                  id="edit-nome"
+                  class="form-control rounded-3"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold">Curso / Série</label>
+                <input
+                  type="text"
+                  id="edit-curso"
+                  class="form-control rounded-3"
+                  placeholder="Ex: Engenharia / 3º Ano Médio"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold">Meta de Estudos</label>
+                <input
+                  type="text"
+                  id="edit-meta"
+                  class="form-control rounded-3"
+                  placeholder="Ex: Passar na USP / Tirar 900+ no ENEM"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold"
+                  >Instagram (opcional)</label
+                >
+                <input
+                  type="text"
+                  id="edit-insta"
+                  class="form-control rounded-3"
+                  placeholder="@seu.usuario"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold">Biografia</label>
+                <textarea
+                  id="edit-bio"
+                  class="form-control rounded-3"
+                  rows="3"
+                  placeholder="Fale um pouco sobre sua rotina de estudos..."
+                ></textarea>
+              </div>
+              <div class="text-end">
+                <button
+                  type="button"
+                  class="btn btn-light rounded-pill px-3"
+                  data-bs-dismiss="modal"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  class="btn btn-primary rounded-pill px-4 fw-bold"
+                >
+                  Salvar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Listar Conexões (Seguidores / Seguindo) -->
+    <div class="modal fade" id="modalConexoes" tabindex="-1" aria-hidden="true">
+      <div
+        class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm"
+      >
+        <div class="modal-content border border-secondary-subtle shadow-lg rounded-4">
+          <div class="modal-header border-0 pb-0">
+            <h6 class="modal-title fw-bold" id="modalConexoesTitulo">
+              Seguidores
+            </h6>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body p-3">
+            <div id="lista-conexoes" class="d-flex flex-column gap-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Card para Confirmação de Exclusão -->
+    <div
+      class="modal fade"
+      id="modalConfirmarExclusao"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border border-secondary-subtle shadow-lg rounded-4 text-center p-3">
+          <div class="modal-body p-2">
+            <div class="text-danger mb-2">
+              <i class="bi bi-trash3-fill display-5"></i>
+            </div>
+            <h6 class="fw-bold text-dark mb-1">Excluir publicação?</h6>
+            <p class="text-muted small mb-3">
+              Esta ação não poderá ser desfeita.
+            </p>
+
+            <div class="d-flex gap-2 justify-content-center">
+              <button
+                type="button"
+                class="btn btn-light rounded-pill btn-sm px-3 fw-bold flex-fill"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                id="btn-confirmar-exclusao"
+                class="btn btn-danger rounded-pill btn-sm px-3 fw-bold flex-fill"
+              >
+                Excluir
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Scripts do Sistema -->
+    <script src="js/supabase-client.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/perfil.js"></script>
+    <script src="js/widget-timer.js"></script>
+  </body>
+</html>

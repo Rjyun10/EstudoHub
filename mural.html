@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EstudoHub - Mural de Conquistas</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="css/root.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/timer.css">
+  </head>
+  <body class="bg-light">
+    <!-- Navbar carregada dinamicamente via js/navbar.js -->
+    <div id="navbar-container"></div>
+
+    <!-- Conteúdo Principal -->
+    <div class="container py-5" style="max-width: 800px">
+      <!-- Cabeçalho do Mural -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h3 class="fw-bold m-0">Mural de Conquistas 🎉</h3>
+          <p class="text-muted small m-0">
+            Celebre suas vitórias e parabenize seus colegas!
+          </p>
+        </div>
+        <button
+          class="btn btn-primary rounded-pill px-4 shadow-sm"
+          data-bs-toggle="modal"
+          data-bs-target="#modalNovaConquista"
+        >
+          <i class="bi bi-plus-lg me-1"></i> Publicar Conquista
+        </button>
+      </div>
+
+      <!-- Feed do Mural -->
+      <div id="mural-feed" class="d-flex flex-column gap-3">
+        <div class="text-center py-5 text-muted">
+          <div class="spinner-border text-primary" role="status"></div>
+          <p class="mt-2 small">Carregando conquistas...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para Publicar Conquista -->
+    <div
+      class="modal fade"
+      id="modalNovaConquista"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border border-secondary-subtle shadow rounded-4">
+          <div class="modal-header border-0 pb-0">
+            <h5 class="modal-title fw-bold">Compartilhar Conquista</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body p-4">
+            <form id="form-mural">
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary"
+                  >Título da Conquista</label
+                >
+                <input
+                  type="text"
+                  id="mural-titulo"
+                  class="form-control"
+                  placeholder="Ex: Passei no Vestibular / Gabaritei Cálculo!"
+                  required
+                />
+              </div>
+
+              <!-- DROPDOWN CUSTOMIZADO (Com opção de campo personalizado) -->
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary"
+                  >Categoria</label
+                >
+                <input
+                  type="hidden"
+                  id="mural-tipo"
+                  value="Vestibular / ENEM"
+                />
+                <div class="dropdown">
+                  <button
+                    class="btn btn-outline-secondary dropdown-toggle w-100 d-flex justify-content-between align-items-center bg-white text-dark border"
+                    type="button"
+                    id="dropdownMenuTipo"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <span id="labelTipoSelecionado">Vestibular / ENEM</span>
+                  </button>
+                  <ul
+                    class="dropdown-menu w-100 shadow-sm border border-secondary-subtle rounded-3"
+                    aria-labelledby="dropdownMenuTipo"
+                  >
+                    <li>
+                      <a
+                        class="dropdown-item py-2 item-categoria"
+                        href="#"
+                        data-valor="Vestibular / ENEM"
+                        >Vestibular / ENEM</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item py-2 item-categoria"
+                        href="#"
+                        data-valor="Aprovação em Disciplina"
+                        >Aprovação em Disciplina</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item py-2 item-categoria"
+                        href="#"
+                        data-valor="Estágio / Emprego"
+                        >Estágio / Emprego</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item py-2 item-categoria"
+                        href="#"
+                        data-valor="Outra Vitória"
+                        >Outra Vitória</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Campo extra que aparece apenas ao selecionar "Outra Vitória" -->
+              <div class="mb-3 d-none" id="container-outra-vitoria">
+                <label class="form-label small fw-bold text-secondary"
+                  >Especifique sua conquista</label
+                >
+                <input
+                  type="text"
+                  id="mural-outra-vitoria"
+                  class="form-control"
+                  placeholder="Ex: Certificação em Inglês, Projeto do Ano..."
+                />
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label small fw-bold text-secondary"
+                  >Mensagem / Relato</label
+                >
+                <textarea
+                  id="mural-mensagem"
+                  class="form-control"
+                  rows="3"
+                  placeholder="Conte como foi essa jornada..."
+                  required
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                class="btn btn-primary w-100 py-2 rounded-3 fw-bold"
+              >
+                Publicar 🎉
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div class="modal fade" id="modalConfirmarExclusao" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border border-secondary-subtle shadow-lg rounded-4">
+          <div class="modal-body text-center p-4">
+            <div class="text-danger mb-2">
+              <i class="bi bi-exclamation-triangle-fill display-5"></i>
+            </div>
+            <h6 class="fw-bold text-dark mb-2">Excluir conquista?</h6>
+            <p class="small text-muted mb-4">Esta ação não poderá ser desfeita.</p>
+            <div class="d-flex gap-2 justify-content-center">
+              <button type="button" class="btn btn-light rounded-pill px-3 btn-sm" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-danger rounded-pill px-3 btn-sm" id="btn-confirmar-exclusao">Excluir</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container (Notificação flutuante) -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
+      <div id="toast-notificacao" class="toast align-items-center text-white bg-dark border border-secondary-subtle rounded-3 shadow" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body" id="toast-mensagem">
+            Mensagem aqui...
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Scripts do Sistema -->
+    <script src="js/supabase-client.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/mural.js"></script>
+    <script src="js/widget-timer.js"></script>
+  </body>
+</html>

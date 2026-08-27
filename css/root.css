@@ -1,0 +1,395 @@
+/* ==========================================================================
+   CONFIGURAÇÃO DE TEMAS E VARIÁVEIS (:root)
+   ========================================================================== */
+
+/* Tema Padrão: Azul Acadêmico */
+:root {
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+  --text-color: #0f172a;
+  --text-secondary: #ffffff; /* <--- Alterado para branco para destacar no botão azul */
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --accent-color: #3b82f6;
+  --text-dark: #0f172a;
+}
+
+/* Tema Roxo (Tecnologia & Criatividade) */
+[data-theme="purple"] {
+  --primary-color: #7c3aed;
+  --primary-hover: #6d28d9;
+  --bg-color: #fcfaff;
+  --card-bg: #ffffff;
+  --text-color: #1e1b4b;
+  --text-secondary: #312e81; /* <--- Adicionado */
+  --text-muted: #6b21a8;
+  --border-color: #f3e8ff;
+  --accent-color: #8b5cf6;
+  --text-dark: #1e1b4b;
+}
+
+/* Tema Verde (Foco & Concentração) */
+[data-theme="green"] {
+  --primary-color: #059669;
+  --primary-hover: #047857;
+  --bg-color: #f0fdf4;
+  --card-bg: #ffffff;
+  --text-color: #064e3b;
+  --text-secondary: #065f46; /* <--- Adicionado */
+  --text-muted: #047857;
+  --border-color: #dcfce7;
+  --accent-color: #10b981;
+  --text-dark: #064e3b;
+}
+
+/* Tema Vermelho / Carmim (Energia) */
+[data-theme="red"] {
+  --primary-color: #dc2626;
+  --primary-hover: #b91c1c;
+  --bg-color: #fef2f2;
+  --card-bg: #ffffff;
+  --text-color: #450a0a;
+  --text-secondary: #5c1d1d; /* <--- Adicionado */
+  --text-muted: #991b1b;
+  --border-color: #fee2e2;
+  --accent-color: #ef4444;
+  --text-dark: #450a0a;
+}
+
+/* Tema Modo Escuro (Dark Mode Premium) */
+[data-theme="dark"] {
+  --primary-color: #3b82f6;
+  --primary-hover: #60a5fa;
+  --bg-color: #0f172a;
+  --card-bg: #1e293b;
+  --text-color: #f8fafc;
+  --text-secondary: #cbd5e1; /* <--- Adicionado (tom claro para leitura em fundo escuro) */
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+  --accent-color: #2563eb;
+  --text-dark: #f8fafc;
+}
+
+/* Tema Oceano (Teal & Ciano) */
+[data-theme="ocean"] {
+  --primary-color: #0891b2;
+  --primary-hover: #0e7490;
+  --bg-color: #ecfeff;
+  --card-bg: #ffffff;
+  --text-color: #164e63;
+  --text-secondary: #0e7490; /* <--- Adicionado */
+  --text-muted: #155e75;
+  --border-color: #cffaff;
+  --accent-color: #06b6d4;
+  --text-dark: #164e63;
+}
+
+/* Tema Pôr do Sol (Orange & Sunset) */
+[data-theme="sunset"] {
+  --primary-color: #ea580c;
+  --primary-hover: #c2410c;
+  --bg-color: #fff7ed;
+  --card-bg: #ffffff;
+  --text-color: #431407;
+  --text-secondary: #7c2d12; /* <--- Adicionado */
+  --text-muted: #9a3412;
+  --border-color: #ffedd5;
+  --accent-color: #f97316;
+  --text-dark: #431407;
+}
+
+/* Tema Amarelo / Âmbar (Foco Produtivo) */
+[data-theme="amber"] {
+  --primary-color: #d97706;
+  --primary-hover: #b45309;
+  --bg-color: #fffbeb;
+  --card-bg: #ffffff;
+  --text-color: #451a03;
+  --text-secondary: #78350f; /* <--- Adicionado */
+  --text-muted: #92400e;
+  --border-color: #fef3c7;
+  --accent-color: #f59e0b;
+  --text-dark: #451a03;
+}
+
+/* Tema Rosa / Pastel (Suave) */
+[data-theme="pink"] {
+  --primary-color: #db2777;
+  --primary-hover: #be185d;
+  --bg-color: #fdf2f8;
+  --card-bg: #ffffff;
+  --text-color: #500724;
+  --text-secondary: #831843; /* <--- Adicionado */
+  --text-muted: #9d174d;
+  --border-color: #fce7f3;
+  --accent-color: #ec4899;
+  --text-dark: #500724;
+}
+
+/* Tema Cyberpunk (Neon Dark) */
+[data-theme="cyberpunk"] {
+  --primary-color: #06b6d4;
+  --primary-hover: #22d3ee;
+  --bg-color: #090d16;
+  --card-bg: #111827;
+  --text-color: #f3f4f6;
+  --text-secondary: #d1d5db; /* <--- Adicionado */
+  --text-muted: #9ca3af;
+  --border-color: #1f2937;
+  --accent-color: #f43f5e;
+  --text-dark: #f3f4f6;
+}
+/* ==========================================================================
+   APLICAÇÃO DAS VARIÁVEIS NAS TAGS GLOBAIS
+   ========================================================================== */
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+  padding-top: 75px;
+}
+
+.card {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-color) !important;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+.btn-light {
+  background-color: var(--primary-color) !important;
+}
+.btn-light:hover {
+  background-color: var(--primary-hover) !important;
+}
+
+.btn-primary {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover) !important;
+  border-color: var(--primary-hover) !important;
+}
+
+/* Quando o radio button estiver marcado (:checked), o label ganha o fundo primary do tema */
+.btn-check:checked + .btn-outline-primary {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: #ffffff !important;
+}
+
+/* Garante a cor normal (transparente) quando não estiver marcado */
+.btn-check:not(:checked) + .btn-outline-primary {
+  background-color: transparent !important;
+  border-color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+}
+
+.btn-outline-primary {
+  color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-color) !important;
+  color: #ffffff !important;
+}
+
+.btn {
+  background-color: var(--accent-color) !important;
+  color: var(--text-color) !important;
+}
+.nav-link {
+  color: var(--text-color) !important;
+  border-radius: 0.25rem;
+}
+.nav-link.active {
+  color: var(--text-color) !important;
+  background-color: var(--accent-color) !important;
+}
+
+.border,
+.border-secondary-subtle {
+  border-color: var(--border-color) !important;
+}
+.bg-white{
+  background-color: var(--bg-color) !important;
+  border: solid 1px var(--border-color);
+}
+.bg-light {
+  background-color: var(--bg-color) !important;
+}
+.bg-primary {
+  background-color: var(--primary-color) !important;
+}
+.bg-primary-subtle {
+  background-color: var(--primary-color) !important;
+}
+
+.text-primary {
+  color: var(--text-color) !important;
+}
+.text-primary-emphasis {
+  color: var(--bg-color) !important;
+}
+.form-text {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  border-color: var(--border-color) !important;
+}
+table {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  border-color: var(--border-color) !important;
+}
+/* 1. Faz os campos de texto (inputs) usarem as cores do tema */
+.form-control {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* 2. Garante contraste perfeito para os placeholders em todos os navegadores */
+.form-control::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 0.7 !important; /* Aumenta a visibilidade do texto de dica */
+}
+
+/* 3. Evita que o fundo do input mude de cor quando o usuário clica nele (foco) */
+.form-control:focus {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+}
+.text-dark {
+  color: var(--text-dark) !important;
+}
+.btn-outline-danger:hover {
+  background-color: #ff002b !important;
+}
+.btn-secondary {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  border-color: var(--border-color) !important;
+}
+.btn-secondary:hover {
+  background-color: var(--primary-color) !important;
+  color: #ffffff !important;
+  border-color: var(--primary-color) !important;
+}
+.btn-success:hover {
+  color: var(--border-color) !important;
+}
+.btn-danger:hover {
+  background-color: #ff002b !important;
+  color: #ffffff !important;
+}
+/* 1. Ajusta o fundo da barra de abas para seguir o tema */
+#pills-tab {
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* 2. Aba inativa: texto visível no tom muted */
+#pills-tab .nav-link {
+  color: var(--text-muted) !important;
+  background-color: transparent !important;
+  transition: all 0.2s ease-in-out;
+}
+
+/* 3. Aba ATIVA (recebe a classe .active da sua função JS) */
+#pills-tab .nav-link.active {
+  background-color: var(--primary-color) !important;
+  color: #ffffff !important;
+}
+
+/* 4. Ajusta o fundo dos cards de conteúdo exibidos abaixo das abas */
+#conteudo-publicacoes .bg-white,
+#conteudo-vitorias .bg-white {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  border-color: var(--border-color) !important;
+}
+/* 1. Força os cards da lista de conexões a usar o tema ativo e remover o gradiente fixo */
+#lista-conexoes .user-card-interactive {
+  background: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* 2. Deixa o nome do usuário com a cor de texto principal (alta visibilidade) */
+#lista-conexoes .user-card-interactive h6,
+#lista-conexoes .user-card-interactive strong,
+#lista-conexoes .user-card-interactive .fw-bold,
+#lista-conexoes .user-card-interactive span:first-child {
+  color: var(--text-color) !important;
+}
+
+/* 3. Garante que a legenda abaixo do nome permaneça legível */
+#lista-conexoes .user-card-interactive small,
+#lista-conexoes .user-card-interactive .text-muted {
+  color: var(--text-muted) !important;
+}
+/* 1. Modal em destaque máximo com fundo semi-transparente e sombra profunda */
+.modal-content {
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.75),
+    0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* 2. Card do Usuário com fundo contrastante e sombra projetada forte */
+.user-card-interactive {
+  /* Usa a cor de fundo do app ou uma camada mais clara/escura para destacar do fundo do modal */
+  background-color: var(--card-bg) !important;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    0 2px 6px rgba(0, 0, 0, 0.2) !important;
+  border: 1px solid var(--border-color) !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* 3. Efeito no Hover: elevação bem perceptível e borda acentuada */
+.user-card-interactive:hover {
+  transform: translateY(-4px) scale(1.01) !important;
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.55),
+    0 0 0 1px var(--primary-color) !important;
+}
+
+/* 1. Ajusta o fundo e o texto do container do comentário */
+#lista-comentarios .bg-light {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* 2. Força a borda lateral (border-start) a usar a cor primária dinâmica do tema */
+#lista-comentarios .border-start,
+#lista-comentarios .border-primary {
+  border-left-color: var(--primary-color) !important;
+}
+
+/* 3. Ajuste para o texto dentro do comentário */
+#lista-comentarios small,
+#lista-comentarios .text-muted {
+  color: var(--text-muted) !important;
+}
+

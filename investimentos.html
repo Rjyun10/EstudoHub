@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EstudoHub - Planejador Financeiro</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.svg" />
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <!-- Chart.js para os Gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- CSS Customizado -->
+    <link rel="stylesheet" href="css/investimentos.css" />
+    <link rel="stylesheet" href="css/root.css" />
+    <link rel="stylesheet" href="css/timer.css" />
+  </head>
+  <body class="bg-light">
+    <!-- Container da Navbar (Injetada via js/navbar.js) -->
+    <div id="navbar-container"></div>
+
+    <!-- Conteúdo Principal -->
+    <main class="container py-4">
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+          <h3 class="fw-bold text-dark m-0">💰 Planejador Financeiro</h3>
+          <p class="text-muted small m-0">
+            Organize suas metas e simule seus investimentos para o futuro.
+          </p>
+        </div>
+      </div>
+
+      <!-- Navegação por Abas -->
+      <ul
+        class="nav nav-pills mb-4 gap-2 border-bottom py-3"
+        id="pills-tab"
+        role="tablist"
+      >
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link active rounded-pill px-4 fw-bold"
+            id="tab-simulador"
+            data-bs-toggle="pill"
+            data-bs-target="#content-simulador"
+            type="button"
+            role="tab"
+          >
+            <i class="bi bi-calculator me-2"></i>Testador de Investimentos
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link rounded-pill px-4 fw-bold"
+            id="tab-metas"
+            data-bs-toggle="pill"
+            data-bs-target="#content-metas"
+            type="button"
+            role="tab"
+          >
+            <i class="bi bi-bullseye me-2"></i>Metas de Renda
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link rounded-pill px-4 fw-bold"
+            id="tab-taxas"
+            data-bs-toggle="pill"
+            data-bs-target="#content-taxas"
+            type="button"
+            role="tab"
+          >
+            <i class="bi bi-graph-up-arrow me-2"></i>Taxas do Dia
+          </button>
+        </li>
+      </ul>
+
+      <!-- Conteúdo das Abas -->
+      <div class="tab-content" id="pills-tabContent">
+        <!-- ABA 1: TESTADOR DE INVESTIMENTOS -->
+        <div
+          class="tab-pane fade show active"
+          id="content-simulador"
+          role="tabpanel"
+        >
+          <div class="row g-4">
+            <div class="col-lg-4">
+              <div
+                class="card border border-secondary-subtle shadow-sm rounded-4 p-4 bg-white"
+              >
+                <h5 class="fw-bold mb-3 text-dark">Simulador</h5>
+                <div class="mb-3">
+                  <label class="form-label small fw-bold text-muted"
+                    >Valor Inicial (R$)</label
+                  >
+                  <input
+                    type="number"
+                    id="sim-inicial"
+                    class="form-control form-control-lg rounded-3"
+                    value="1000"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label small fw-bold text-muted"
+                    >Aporte Mensal (R$)</label
+                  >
+                  <input
+                    type="number"
+                    id="sim-aporte"
+                    class="form-control form-control-lg rounded-3"
+                    value="200"
+                  />
+                </div>
+
+                <!-- Prazo com Seletor Unificado -->
+                <div class="mb-3">
+                  <label class="form-label small fw-bold text-muted"
+                    >Prazo</label
+                  >
+                  <div class="input-group input-group-custom">
+                    <input
+                      type="number"
+                      id="sim-tempo"
+                      class="form-control form-control-lg border-0 shadow-none"
+                      value="5"
+                      oninput="calcularSimulador()"
+                    />
+
+                    <!-- Div com position-relative para o menu flutuar corretamente -->
+                    <div class="dropdown position-relative">
+                      <button
+                        class="btn btn-dropdown-custom dropdown-toggle h-100 fw-semibold px-3"
+                        type="button"
+                        id="sim-tipo-btn"
+                        onclick="toggleTemaDropdown(event, 'menuSimPrazo')"
+                        data-value="anos"
+                      >
+                        Anos
+                      </button>
+
+                      <!-- Adicionado o ID menuSimPrazo correspondente -->
+                      <ul
+                        class="dropdown-menu dropdown-menu-end dropdown-menu-custom shadow-sm rounded-4 mt-1 p-2"
+                        id="menuSimPrazo"
+                      >
+                        <li>
+                          <button
+                            type="button"
+                            class="dropdown-item rounded-3 py-2 fw-semibold active-custom"
+                            onclick="
+                              selecionarOpcao('sim-tipo-btn', 'anos', 'Anos')
+                            "
+                          >
+                            Anos
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="dropdown-item rounded-3 py-2 fw-semibold"
+                            onclick="
+                              selecionarOpcao('sim-tipo-btn', 'meses', 'Meses')
+                            "
+                          >
+                            Meses
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label small fw-bold text-muted"
+                    >Taxa Anual Estimada (%)</label
+                  >
+                  <input
+                    type="number"
+                    id="sim-taxa"
+                    class="form-control form-control-lg rounded-3"
+                    value="10"
+                    step="0.5"
+                  />
+                </div>
+                <button
+                  class="btn btn-primary w-100 fw-bold rounded-3 py-3 mt-2 btn-card-action"
+                  onclick="calcularSimulador()"
+                >
+                  Calcular Rendimento
+                </button>
+              </div>
+            </div>
+
+            <div class="col-lg-8">
+              <div
+                class="card border border-secondary-subtle shadow-sm rounded-4 p-4 bg-white h-100 d-flex flex-column justify-content-between"
+              >
+                <div>
+                  <h5 class="fw-bold mb-3 text-dark">Evolução do Patrimônio</h5>
+                  <div class="chart-container">
+                    <canvas id="chartSimulador"></canvas>
+                  </div>
+                </div>
+                <div class="row g-2 mt-3">
+                  <div class="col-4">
+                    <div class="p-3 bg-light rounded-3 text-center border">
+                      <small class="text-muted d-block">Total Investido</small>
+                      <strong class="text-dark fs-6" id="res-investido"
+                        >R$ 0,00</strong
+                      >
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div
+                      class="p-3 bg-success-subtle rounded-3 text-center border border-success-subtle"
+                    >
+                      <small class="text-success-emphasis d-block"
+                        >Valor Bruto</small
+                      >
+                      <strong class="text-success fs-6 fw-bold" id="res-bruto"
+                        >R$ 0,00</strong
+                      >
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div
+                      class="p-3 bg-primary-subtle rounded-3 text-center border border-primary-subtle"
+                    >
+                      <small class="text-primary-emphasis d-block"
+                        >Valor Líquido (-15% IR)</small
+                      >
+                      <strong class="text-primary fs-6 fw-bold" id="res-liquido"
+                        >R$ 0,00</strong
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ABA 2: METAS DE RENDA -->
+        <div class="tab-pane fade" id="content-metas" role="tabpanel">
+          <div class="row g-4">
+            <div class="col-lg-4">
+              <div
+                class="card border border-secondary-subtle shadow-sm rounded-4 p-4 bg-white"
+              >
+                <h5 class="fw-bold mb-3 text-dark">Sua Meta</h5>
+                <div class="mb-3">
+                  <label class="form-label small fw-bold text-muted"
+                    >Meta Financeira (R$)</label
+                  >
+                  <input
+                    type="number"
+                    id="meta-valor"
+                    class="form-control form-control-lg rounded-3"
+                    value="1000000"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label small fw-bold text-muted"
+                    >Prazo Desejado</label
+                  >
+                  <div class="input-group input-group-custom">
+                    <input
+                      type="number"
+                      id="meta-tempo"
+                      class="form-control form-control-lg border-0 shadow-none"
+                      value="10"
+                    />
+
+                    <div class="dropdown">
+                      <button
+                        class="btn btn-dropdown-custom dropdown-toggle h-100 fw-semibold text-secondary px-3"
+                        type="button"
+                        id="meta-tipo-btn"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        data-value="anos"
+                      >
+                        Anos
+                      </button>
+                      <ul
+                        class="dropdown-menu dropdown-menu-end dropdown-menu-custom shadow-sm rounded-4 mt-1 p-2"
+                      >
+                        <li>
+                          <button
+                            type="button"
+                            class="dropdown-item rounded-3 py-2 fw-semibold active-custom"
+                            onclick="
+                              selecionarOpcao('meta-tipo-btn', 'anos', 'Anos')
+                            "
+                          >
+                            Anos
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            class="dropdown-item rounded-3 py-2 fw-semibold"
+                            onclick="
+                              selecionarOpcao('meta-tipo-btn', 'meses', 'Meses')
+                            "
+                          >
+                            Meses
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  class="btn btn-success text-white w-100 fw-bold rounded-3 py-3 mt-2 btn-card-action"
+                  onclick="calcularMeta()"
+                >
+                  Calcular Aporte Necessário
+                </button>
+              </div>
+            </div>
+
+            <div class="col-lg-8">
+              <div
+                class="card border border-secondary-subtle shadow-sm rounded-4 p-4 bg-white h-100 d-flex flex-column justify-content-between"
+              >
+                <div>
+                  <h5 class="fw-bold mb-3 text-dark">
+                    Trajetória até o Objetivo
+                  </h5>
+                  <div class="chart-container">
+                    <canvas id="chartMeta"></canvas>
+                  </div>
+                </div>
+                <div
+                  class="p-3 bg-warning-subtle rounded-3 text-center border border-warning-subtle mt-3"
+                >
+                  <small class="text-warning-emphasis d-block fw-bold"
+                    >Aporte Mensal Recomendado (Estimando 10% a.a.)</small
+                  >
+                  <h3 class="text-dark fw-bold m-0 mt-1" id="res-aporte-meta">
+                    R$ 0,00 / mês
+                  </h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ABA 3: TABELA DE RENDIMENTOS DIÁRIOS -->
+        <div class="tab-pane fade" id="content-taxas" role="tabpanel">
+          <div
+            class="card border border-secondary-subtle shadow-sm rounded-4 p-4 bg-white"
+          >
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div>
+                <h5 class="fw-bold m-0 text-dark">Renda Fixa & Indicadores</h5>
+                <small class="text-muted"
+                  >Acompanhe as estimativas das principais taxas de
+                  mercado.</small
+                >
+              </div>
+              <span
+                class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill"
+              >
+                ● Atualizado Diariamente
+              </span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-hover align-middle m-0">
+                <thead class="table-light">
+                  <tr>
+                    <th class="py-3">Ativo / Indicador</th>
+                    <th class="py-3">Categoria</th>
+                    <th class="py-3">Rentabilidade Estimada (a.a.)</th>
+                    <th class="py-3">Isento de IR</th>
+                  </tr>
+                </thead>
+                <tbody id="tabela-taxas">
+                  <!-- Injetado dinamicamente via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/investimentos.js"></script>
+    <script src="js/widget-timer.js"></script>
+  </body>
+</html>

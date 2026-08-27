@@ -1,0 +1,105 @@
+/* css/investimentos.css */
+.chart-container {
+  position: relative;
+  height: 280px;
+  width: 100%;
+}
+
+.btn-card-action {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.btn-card-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.nav{
+  padding: 6px;
+  border-radius: 12px;
+}
+/* Ajustes de Abas Pill */
+.nav-pills .nav-link {
+  color: var(--text-muted);
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.nav-pills .nav-link.active {
+  background-color: var(--primary-color) !important;
+  color: #ffffff !important;
+  border-color: var(--primary-color) !important;
+}
+
+.nav-pills .nav-link:hover:not(.active) {
+  background-color: var(--bg-color);
+  color: var(--primary-color);
+}
+
+/* Container de Input Unificado */
+.input-group-custom {
+  border: 1.5px solid var(--border-color);
+  border-radius: 0.75rem;
+  background-color: var(--card-bg);
+  transition: all 0.2s ease-in-out;
+}
+
+.input-group-custom:focus-within {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.15);
+}
+
+.input-group-custom .form-control {
+  border-top-left-radius: 0.75rem !important;
+  border-bottom-left-radius: 0.75rem !important;
+  background-color: transparent;
+  color: var(--text-color);
+}
+
+/* Botão do Dropdown */
+.btn-dropdown-custom {
+  background-color: var(--bg-color);
+  border: none;
+  border-left: 1.5px solid var(--border-color);
+  border-top-right-radius: 0.75rem !important;
+  border-bottom-right-radius: 0.75rem !important;
+  color: var(--text-secondary) !important;
+}
+
+.btn-dropdown-custom:focus,
+.btn-dropdown-custom:active {
+  box-shadow: none !important;
+  background-color: var(--border-color);
+}
+
+/* Menu Flutuante */
+.dropdown-menu-custom {
+  min-width: 120px;
+  background-color: var(--card-bg);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid var(--border-color) !important;
+  z-index: 1050 !important;
+}
+
+.dropdown-menu-custom .dropdown-item {
+  color: var(--text-color);
+  transition: all 0.15s ease;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+}
+
+.dropdown-menu-custom .dropdown-item:hover {
+  background-color: var(--bg-color);
+  color: var(--primary-color);
+}
+
+.dropdown-menu-custom .dropdown-item.active-custom {
+  color: var(--primary-color);
+  background-color: var(--bg-color);
+  font-weight: 600;
+}

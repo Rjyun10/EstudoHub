@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <!-- Fundo do Card/Ícone -->
+  <rect width="512" height="512" rx="128" fill="#007bff"/>
+  
+  <!-- Símbolo: Livro Aberto / Conectividade (Hub) -->
+  <path d="M256 160c-35-25-80-30-120-30-20 0-40 5-60 15v210c20-10 40-15 60-15 40 0 85 5 120 30 35-25 80-30 120-30 20 0 40 5 60 15V145c-20-10-40-15-60-15-40 0-85 5-120 30z" fill="none" stroke="#ffffff" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Linha Central do Livro -->
+  <line x1="256" y1="160" x2="256" y2="370" stroke="#ffffff" stroke-width="28" stroke-linecap="round"/>
+  
+  <!-- Brilho/Ponto do "Hub" -->
+  <circle cx="256" cy="115" r="24" fill="#ffc107"/>
+</svg>
