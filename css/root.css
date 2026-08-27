@@ -14,6 +14,7 @@
   --border-color: #e2e8f0;
   --accent-color: #3b82f6;
   --text-dark: #0f172a;
+  --text-dark-financas:#0f172a;
 }
 
 /* Tema Roxo (Tecnologia & Criatividade) */
@@ -28,6 +29,7 @@
   --border-color: #f3e8ff;
   --accent-color: #8b5cf6;
   --text-dark: #1e1b4b;
+  --text-dark-financas:#1e1b4b;
 }
 
 /* Tema Verde (Foco & Concentração) */
@@ -42,6 +44,7 @@
   --border-color: #dcfce7;
   --accent-color: #10b981;
   --text-dark: #064e3b;
+  --text-dark-financas:#064e3b;
 }
 
 /* Tema Vermelho / Carmim (Energia) */
@@ -56,6 +59,7 @@
   --border-color: #fee2e2;
   --accent-color: #ef4444;
   --text-dark: #450a0a;
+  --text-dark-financas:#450a0a;
 }
 
 /* Tema Modo Escuro (Dark Mode Premium) */
@@ -69,7 +73,8 @@
   --text-muted: #94a3b8;
   --border-color: #334155;
   --accent-color: #2563eb;
-  --text-dark: #1e293b;
+  --text-dark: #f8fafc;
+  --text-dark-financas:#0f172a;
 }
 
 /* Tema Oceano (Teal & Ciano) */
@@ -84,6 +89,7 @@
   --border-color: #cffaff;
   --accent-color: #06b6d4;
   --text-dark: #164e63;
+  --text-dark-financas:#164e63;
 }
 
 /* Tema Pôr do Sol (Orange & Sunset) */
@@ -98,6 +104,7 @@
   --border-color: #ffedd5;
   --accent-color: #f97316;
   --text-dark: #431407;
+  --text-dark-financas:#431407;
 }
 
 /* Tema Amarelo / Âmbar (Foco Produtivo) */
@@ -112,6 +119,7 @@
   --border-color: #fef3c7;
   --accent-color: #f59e0b;
   --text-dark: #451a03;
+  --text-dark-financas:#451a03;
 }
 
 /* Tema Rosa / Pastel (Suave) */
@@ -126,6 +134,7 @@
   --border-color: #fce7f3;
   --accent-color: #ec4899;
   --text-dark: #500724;
+  --text-dark-financas:#500724;
 }
 
 /* Tema Cyberpunk (Neon Dark) */
@@ -139,7 +148,8 @@
   --text-muted: #9ca3af;
   --border-color: #1f2937;
   --accent-color: #f43f5e;
-  --text-dark: #111827;
+  --text-dark: #f3f4f6;
+  --text-dark-financas: #090d16;
 }
 /* ==========================================================================
    APLICAÇÃO DAS VARIÁVEIS NAS TAGS GLOBAIS
