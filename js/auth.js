@@ -113,12 +113,13 @@ window.verificarSessao = async function () {
   }
 };
 
-// 4. LOGOUT
+// 4. LOGOUT CORRIGIDO
 window.fazerLogout = async function () {
   if (window._supabase) {
     await window._supabase.auth.signOut();
   }
-  window.location.href = "login.html";
+  // Usa replace para impedir que o botão "Voltar" traga a sessão antiga
+  window.location.replace("login.html");
 };
 
 // 5. REGISTRO DE PRESENÇA ONLINE
