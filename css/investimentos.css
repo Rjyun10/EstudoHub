@@ -15,6 +15,9 @@
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
+.btn-success:hover{
+  background-color: #198754 !important;
+}
 
 .nav{
   padding: 6px;
@@ -106,4 +109,22 @@
 
 .text-dark-financas{
   color: var(--text-dark-financas) !important;
+}
+@media (max-width: 768px) {
+  /* Reduz o tamanho dos textos e espaçamentos da tabela no celular */
+  .table-responsive table {
+    font-size: 0.8rem;
+  }
+
+  .table-responsive th, 
+  .table-responsive td {
+    padding: 8px 4px !important;
+    white-space: nowrap; /* Evita que o texto quebre de forma feia */
+  }
+
+  /* Se preferir que a tabela tenha rolagem lateral suave em vez de quebrar */
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }

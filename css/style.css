@@ -53,6 +53,18 @@
   }
 }
 
+@media (max-width: 576px) {
+  /* Força o menu mobile a se alinhar à direita da tela, evitando cortes */
+  .dropdown-menu.dropdown-menu-end {
+    position: fixed !important;
+    right: 15px !important;
+    left: auto !important;
+    top: 60px !important; /* Ajuste a altura para ficar logo abaixo da barra azul */
+    max-height: 80vh;
+    overflow-y: auto;
+    z-index: 1050;
+  }
+}
 /* Animação do Menu Dropdown */
 .dropdown-menu {
   display: block;

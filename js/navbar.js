@@ -108,11 +108,15 @@ function renderizarNavbar() {
             </button>
             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 p-2" id="menuTemasMobile" style="font-size: 0.85rem; min-width: 150px;">
               <li><h6 class="dropdown-header text-uppercase fs-7 fw-bold text-muted px-2 py-1">Tema</h6></li>
-              <li><button class="dropdown-item rounded-2 py-1.5" onclick="mudarTema('')">🔵 Azul</button></li>
-              <li><button class="dropdown-item rounded-2 py-1.5" onclick="mudarTema('purple')">🟣 Roxo</button></li>
-              <li><button class="dropdown-item rounded-2 py-1.5" onclick="mudarTema('green')">🟢 Verde</button></li>
-              <li><button class="dropdown-item rounded-2 py-1.5" onclick="mudarTema('dark')">🌙 Dark</button></li>
-              <li><button class="dropdown-item rounded-2 py-1.5" onclick="mudarTema('ocean')">🌊 Oceano</button></li>
+              <li><button class="dropdown-item rounded-2 py-1.5" onclick="mudarTema('')">🔵 Azul Acadêmico</button></li>
+              <li><button class="dropdown-item rounded-2 py-1.5" onclick="mudarTema('purple')">🟣 Roxo Tecnológico</button></li>
+              <li><button class="dropdown-item rounded-2 py-1.5" onclick="mudarTema('green')">🟢 Verde Foco</button></li>
+              <li><button class="dropdown-item rounded-2 py-1.5" onclick="mudarTema('red')">🔴 Vermelho Carmim</button></li>
+              <li><button class="dropdown-item rounded-2 py-1.5" onclick="mudarTema('dark')">🌙 Dark Mode</button></li>
+              <li><button class="dropdown-item rounded-2 py-1.5" onclick="mudarTema('ocean')">🌊 Oceano Teal</button></li>
+              <li><button class="dropdown-item rounded-2 py-1.5" onclick="mudarTema('sunset')">🌅 Pôr do Sol</button></li>
+              <li><button class="dropdown-item rounded-2 py-1.5" onclick="mudarTema('amber')">🟡 Âmbar Produtivo</button></li>
+              <li><button class="dropdown-item rounded-2 py-1.5" onclick="mudarTema('pink')">🌸 Rosa Pastel</button></li>
               <li><button class="dropdown-item rounded-2 py-1.5" onclick="mudarTema('cyberpunk')">⚡ Cyberpunk</button></li>
             </ul>
           </div>

@@ -230,19 +230,75 @@ function renderGraficoMeta(labels, dataProgresso) {
 }
 
 // ABA 3: TABELA DE TAXAS
-function carregarTabelaTaxas() {
+async function carregarTabelaTaxas() {
   const tbody = document.getElementById("tabela-taxas");
   if (!tbody) return;
+  tbody.innerHTML = `<tr><td colspan="4" class="text-center py-3 text-muted">Carregando taxas atualizadas...</td></tr>`;
+
+  let taxaSelicAtual = "11,25%"; // Valor padrão caso a API falhe
+
+  try {
+    // Exemplo real: Buscando a taxa Selic acumulada ou diária da API pública do Banco Central do Brasil (SGS - Série 432)
+    const resposta = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados/ultimos/1?formato=json');
+    const dados = await resposta.json();
+    if (dados && dados.length > 0) {
+      taxaSelicAtual = `Selic + ${(parseFloat(dados[0].valor) - 10.5).toFixed(2)}%`; // Exemplo de cálculo dinâmico baseado na Selic
+    }
+  } catch (erro) {
+    console.log("Não foi possível carregar a API, usando valores padrão.", erro);
+  }
+
+  // Seus dados atualizados (pode mesclar o valor vindo da API)
+  const dadosDinamicosRendaFixa = [
+    {
+      nome: "Tesouro Selic 2029",
+      categoria: "Tesouro Direto",
+      taxa: taxaSelicAtual, // Tax puxada dinamicamente da API
+      ir: "Não",
+    },
+    {
+      nome: "CDB Banco Sofisa 110% CDI",
+      categoria: "CDB",
+      taxa: "11,55% a.a.",
+      ir: "Não",
+    },
+    {
+      nome: "LCA Banco do Brasil",
+      categoria: "LCA",
+      taxa: "9,20% a.a.",
+      ir: "SIM",
+    },
+    {
+      nome: "LCI Caixa Econômica",
+      categoria: "LCI",
+      taxa: "9,10% a.a.",
+      ir: "SIM",
+    },
+    {
+      nome: "Tesouro IPCA+ 2035",
+      categoria: "Tesouro Direto",
+      taxa: "IPCA + 6,15%",
+      ir: "Não",
+    },
+  ];
+
   tbody.innerHTML = "";
 
-  dadosRendaFixa.forEach((item) => {
+  dadosDinamicosRendaFixa.forEach((item) => {
     const isIsento = item.ir === "SIM";
     tbody.innerHTML += `
       <tr>
-        <td class="fw-bold text-dark">${item.nome}</td>
-        <td><span class="badge bg-light text-dark border">${item.categoria}</span></td>
-        <td class="text-success fw-bold">${item.taxa}</td>
-        <td>
+        <td class="fw-bold text-dark">
+          ${item.nome}
+          <div class="d-md-none small text-muted fw-normal">${item.categoria}</div>
+        </td>
+        <td class="d-none d-md-table-cell align-middle">
+          <span class="badge bg-light text-dark border">${item.categoria}</span>
+        </td>
+        <td class="text-success fw-bold align-middle">
+          ${item.taxa}
+        </td>
+        <td class="text-end align-middle">
           <span class="badge ${isIsento ? "bg-success-subtle text-success" : "bg-secondary-subtle text-secondary"} border">
             ${isIsento ? "Sim" : "Não"}
           </span>

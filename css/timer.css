@@ -304,3 +304,59 @@
 [data-theme="cyberpunk"] .btn-close {
   filter: invert(1) grayscale(100%) brightness(200%);
 }
+/* Ajuste responsivo para o calendário no celular */
+@media (max-width: 576px) {
+  /* Container principal do calendário */
+  .calendario, .calendar-grid {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 5px !important;
+    box-sizing: border-box;
+  }
+
+  /* Reduz o tamanho dos dias para caberem 7 colunas perfeitamente */
+  .dia-calendario, .calendar-day {
+    min-height: 40px !important;
+    padding: 4px !important;
+    font-size: 0.8rem !important;
+  }
+
+  /* Se o cabeçalho com o mês e botões estiver quebrando, ajusta o topo */
+  .calendario-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+}
+/* Container que define as 7 colunas exatas da semana e dos dias */
+.grid-calendario-semana, 
+.grid-calendario-dias {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* Cria exatamente 7 colunas de tamanhos iguais */
+  gap: 6px; /* Espaçamento seguro entre os dias */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Estilo individual de cada dia para se adaptar ao espaço */
+.dia-card, .dia-vazio {
+  min-height: 55px; /* Altura padrão confortável */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* Ajustes específicos para telas de celular */
+@media (max-width: 576px) {
+  .grid-calendario-semana, 
+  .grid-calendario-dias {
+    gap: 3px; /* Reduz o espaço no mobile para caber melhor */
+  }
+
+  .dia-card, .dia-vazio {
+    min-height: 42px; /* Diminui a altura no celular */
+    font-size: 0.85rem; /* Letra menor para não estourar */
+    padding: 2px;
+  }
+}

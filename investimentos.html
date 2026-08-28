@@ -21,9 +21,33 @@
     <!-- CSS Customizado -->
     <link rel="stylesheet" href="css/investimentos.css" />
     <link rel="stylesheet" href="css/root.css" />
+    <link rel="stylesheet" href="css/splash.css" />
     <link rel="stylesheet" href="css/timer.css" />
   </head>
   <body class="bg-light">
+    <div
+      id="splash-screen"
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: opacity 0.3s ease;
+      "
+    >
+      <div class="text-center">
+        <h1 class="logo-animado fw-bold text-white mb-2">Planejador Financeiro</h1>
+        <div
+          class="spinner-border text-light spinner-border-sm"
+          role="status"
+        ></div>
+      </div>
+    </div>
     <!-- Container da Navbar (Injetada via js/navbar.js) -->
     <div id="navbar-container"></div>
 
@@ -276,21 +300,25 @@
                       id="meta-tempo"
                       class="form-control form-control-lg border-0 shadow-none"
                       value="10"
+                      oninput="calcularMeta()"
                     />
 
-                    <div class="dropdown">
+                    <!-- Div com position-relative para o menu flutuar corretamente -->
+                    <div class="dropdown position-relative">
                       <button
-                        class="btn btn-dropdown-custom dropdown-toggle h-100 fw-semibold text-secondary px-3"
+                        class="btn btn-dropdown-custom dropdown-toggle h-100 fw-semibold px-3"
                         type="button"
                         id="meta-tipo-btn"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
+                        onclick="toggleTemaDropdown(event, 'menuMetaPrazo')"
                         data-value="anos"
                       >
                         Anos
                       </button>
+
+                      <!-- ID correspondente para abrir via JavaScript e classe dropdown-menu-end para alinhar na tela -->
                       <ul
                         class="dropdown-menu dropdown-menu-end dropdown-menu-custom shadow-sm rounded-4 mt-1 p-2"
+                        id="menuMetaPrazo"
                       >
                         <li>
                           <button
@@ -345,7 +373,10 @@
                   <small class="text-warning-emphasis d-block fw-bold"
                     >Aporte Mensal Recomendado (Estimando 10% a.a.)</small
                   >
-                  <h3 class="text-dark-financas fw-bold m-0 mt-1" id="res-aporte-meta">
+                  <h3
+                    class="text-dark-financas fw-bold m-0 mt-1"
+                    id="res-aporte-meta"
+                  >
                     R$ 0,00 / mês
                   </h3>
                 </div>
@@ -375,18 +406,16 @@
             </div>
 
             <div class="table-responsive">
-              <table class="table table-hover align-middle m-0">
+              <table class="table table-hover table-sm align-middle m-0">
                 <thead class="table-light">
                   <tr>
-                    <th class="py-3">Ativo / Indicador</th>
-                    <th class="py-3">Categoria</th>
-                    <th class="py-3">Rentabilidade Estimada (a.a.)</th>
-                    <th class="py-3">Isento de IR</th>
+                    <th class="py-2 px-2">Ativo</th>
+                    <th class="py-2 d-none d-md-table-cell">Categoria</th>
+                    <th class="py-2 px-1">Rentab. (a.a.)</th>
+                    <th class="py-2 px-2 text-end">IR</th>
                   </tr>
                 </thead>
-                <tbody id="tabela-taxas">
-                  <!-- Injetado dinamicamente via JS -->
-                </tbody>
+                <tbody id="tabela-taxas"></tbody>
               </table>
             </div>
           </div>
@@ -397,6 +426,7 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/navbar.js"></script>
+    <script src="js/splash.js"></script>
     <script src="js/investimentos.js"></script>
     <script src="js/widget-timer.js"></script>
   </body>
