@@ -147,25 +147,34 @@ async function registrarPresencaOnline() {
   }
 }
 
-// 6. INICIALIZAÇÃO, PROTEÇÃO DE ROTAS E OUVINTES
-document.addEventListener("DOMContentLoaded", async () => {
+// Função centralizada de verificação e proteção de rotas
+async function checarProtecaoPagina() {
   if (!window._supabase) return;
 
   const path = window.location.pathname;
   const isLoginPage = path.endsWith("login.html") || path.endsWith("auth.html") || path.endsWith("/");
 
-  // Se a página atual NÃO for a de login, valida obrigatoriamente se há sessão ativa
   if (!isLoginPage) {
     const usuario = await window.verificarSessao();
     if (!usuario) {
       window.location.replace("login.html");
-      return;
+      return false;
     }
   }
+  return true;
+}
+
+// 6. INICIALIZAÇÃO E OUVINTES
+document.addEventListener("DOMContentLoaded", async () => {
+  const autorizado = await checarProtecaoPagina();
+  if (!autorizado) return;
 
   // Dispara o registro de presença se estiver logado
   registrarPresencaOnline();
   setInterval(registrarPresencaOnline, 2 * 60 * 1000);
+
+  const path = window.location.pathname;
+  const isLoginPage = path.endsWith("login.html") || path.endsWith("auth.html") || path.endsWith("/");
 
   // Ouve mudanças no estado de autenticação
   window._supabase.auth.onAuthStateChange((event, session) => {
@@ -173,4 +182,20 @@ document.addEventListener("DOMContentLoaded", async () => {
       window.location.replace("index.html");
     }
   });
+});
+
+// 7. BLOQUEIO DE CACHE DO NAVEGADOR (PAGESHOW)
+// Força a revalidação caso o navegador restaure a página do cache ao trocar/voltar de aba
+window.addEventListener("pageshow", async (event) => {
+  if (event.persisted) {
+    const path = window.location.pathname;
+    const isLoginPage = path.endsWith("login.html") || path.endsWith("auth.html") || path.endsWith("/");
+
+    if (!isLoginPage) {
+      const usuario = await window.verificarSessao();
+      if (!usuario) {
+        window.location.replace("login.html");
+      }
+    }
+  }
 });
