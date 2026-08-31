@@ -113,15 +113,31 @@ window.verificarSessao = async function () {
   }
 };
 
-// 4. LOGOUT CORRIGIDO
+// 4. LOGOUT COMPLETO E BLINDADO
 window.fazerLogout = async function () {
-  if (window._supabase) {
-    await window._supabase.auth.signOut();
+  try {
+    if (window._supabase) {
+      await window._supabase.auth.signOut({ scope: 'global' });
+    }
+  } catch (err) {
+    console.error("Erro ao deslogar do Supabase:", err);
   }
-  // Usa replace para impedir que o botão "Voltar" traga a sessão antiga
+
+  // Varredura agressiva: apaga qualquer chave do localStorage que pertença ao Supabase
+  const keysToRemove = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && (key.includes("supabase") || key.includes("sb-"))) {
+      keysToRemove.push(key);
+    }
+  }
+  keysToRemove.forEach(key => localStorage.removeItem(key));
+
+  sessionStorage.clear();
+
+  // Redireciona e força a limpeza do histórico da aba
   window.location.replace("login.html");
 };
-
 // 5. REGISTRO DE PRESENÇA ONLINE
 async function registrarPresencaOnline() {
   if (!window._supabase) return;
