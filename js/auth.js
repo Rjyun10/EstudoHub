@@ -46,7 +46,7 @@ window.cadastrarUsuario = async function (email, senha, nome) {
 
     if (data.session) {
       setTimeout(() => {
-        window.location.href = "index.html";
+        window.location.replace("index.html");
       }, 1500);
     }
   } catch (err) {
@@ -82,7 +82,7 @@ window.fazerLogin = async function (email, senha) {
       return;
     }
 
-    window.location.href = "index.html";
+    window.location.replace("index.html");
   } catch (err) {
     console.error("Erro inesperado:", err);
     notificar("Ocorreu um erro ao tentar fazer login.", "danger");
@@ -100,9 +100,6 @@ window.verificarSessao = async function () {
     const { data, error } = await window._supabase.auth.getSession();
 
     if (error || !data || !data.session) {
-      if (!window.location.pathname.includes("login.html")) {
-        window.location.href = "login.html";
-      }
       return null;
     }
 
@@ -113,31 +110,24 @@ window.verificarSessao = async function () {
   }
 };
 
-// 4. LOGOUT COMPLETO E BLINDADO
+// 4. LOGOUT DEFINITIVO
 window.fazerLogout = async function () {
   try {
     if (window._supabase) {
       await window._supabase.auth.signOut({ scope: 'global' });
     }
   } catch (err) {
-    console.error("Erro ao deslogar do Supabase:", err);
+    console.error("Erro ao deslogar:", err);
   }
 
-  // Varredura agressiva: apaga qualquer chave do localStorage que pertença ao Supabase
-  const keysToRemove = [];
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (key && (key.includes("supabase") || key.includes("sb-"))) {
-      keysToRemove.push(key);
-    }
-  }
-  keysToRemove.forEach(key => localStorage.removeItem(key));
-
+  // Limpa rigorosamente ambos os storages para evitar resíduos
+  localStorage.clear();
   sessionStorage.clear();
 
-  // Redireciona e força a limpeza do histórico da aba
+  // Força o redirecionamento limpando o histórico da aba
   window.location.replace("login.html");
 };
+
 // 5. REGISTRO DE PRESENÇA ONLINE
 async function registrarPresencaOnline() {
   if (!window._supabase) return;
@@ -157,25 +147,30 @@ async function registrarPresencaOnline() {
   }
 }
 
-// 6. INICIALIZAÇÃO E OUVINTE DE AUTH (CORRIGIDO)
-document.addEventListener("DOMContentLoaded", () => {
-  // Dispara o registro de presença se o supabase já existir
-  if (window._supabase) {
-    registrarPresencaOnline();
-    setInterval(registrarPresencaOnline, 2 * 60 * 1000);
+// 6. INICIALIZAÇÃO, PROTEÇÃO DE ROTAS E OUVINTES
+document.addEventListener("DOMContentLoaded", async () => {
+  if (!window._supabase) return;
 
-    // Ouve mudanças no estado de autenticação utilizando window._supabase.auth
-    window._supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_IN" && session) {
-        const path = window.location.pathname;
-        if (
-          path.endsWith("login.html") ||
-          path.endsWith("auth.html") ||
-          path === "/"
-        ) {
-          window.location.href = "index.html";
-        }
-      }
-    });
+  const path = window.location.pathname;
+  const isLoginPage = path.endsWith("login.html") || path.endsWith("auth.html") || path.endsWith("/");
+
+  // Se a página atual NÃO for a de login, valida obrigatoriamente se há sessão ativa
+  if (!isLoginPage) {
+    const usuario = await window.verificarSessao();
+    if (!usuario) {
+      window.location.replace("login.html");
+      return;
+    }
   }
+
+  // Dispara o registro de presença se estiver logado
+  registrarPresencaOnline();
+  setInterval(registrarPresencaOnline, 2 * 60 * 1000);
+
+  // Ouve mudanças no estado de autenticação
+  window._supabase.auth.onAuthStateChange((event, session) => {
+    if (event === "SIGNED_IN" && session && isLoginPage) {
+      window.location.replace("index.html");
+    }
+  });
 });
