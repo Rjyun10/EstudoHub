@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   userIdAtualGlobal = user.id;
   carregarMural(user.id);
 
-  // Escutador dos itens do Dropdown
+  // Escutador dos itens do Dropdown de Categoria (Conquistas)
   document.querySelectorAll(".item-categoria").forEach((item) => {
     item.addEventListener("click", (e) => {
       e.preventDefault();
@@ -52,6 +52,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         inputOutra.removeAttribute("required");
         inputOutra.value = "";
       }
+    });
+  });
+
+  // Escutador dos itens do Dropdown de Feedback
+  document.querySelectorAll(".item-feedback").forEach((item) => {
+    item.addEventListener("click", (e) => {
+      e.preventDefault();
+      const valor = item.getAttribute("data-valor");
+      const label = item.getAttribute("data-label");
+      
+      document.getElementById("fb-tipo").value = valor;
+      document.getElementById("feedback-tipo-label").innerText = label;
     });
   });
 
@@ -247,3 +259,56 @@ async function alternarCurtida(postId, userId, jaCurtiu) {
     console.error("Erro ao alternar curtida:", err);
   }
 }
+
+// ==========================================
+// 3. ENVIAR FEEDBACK
+// ==========================================
+
+window.enviarFeedback = async function () {
+  const tipo = document.getElementById("fb-tipo").value;
+  const mensagemInput = document.getElementById("fb-texto").value;
+  const mensagem = formatarPrimeiraMaiuscula(mensagemInput);
+
+  if (!mensagem) {
+    if (typeof window.mostrarToast === "function") {
+      window.mostrarToast("Digite sua mensagem antes de enviar.", "danger");
+    } else {
+      alert("Digite sua mensagem antes de enviar.");
+    }
+    return;
+  }
+
+  try {
+    const {
+      data: { user },
+    } = await window._supabase.auth.getUser();
+
+    const { error } = await window._supabase.from("feedbacks").insert([
+      {
+        user_id: user ? user.id : null,
+        tipo: tipo,
+        mensagem: mensagem,
+      },
+    ]);
+
+    if (error) throw error;
+
+    if (typeof window.mostrarToast === "function") {
+      window.mostrarToast("Obrigado pelo seu feedback!", "success");
+    } else {
+      alert("Obrigado pelo seu feedback!");
+    }
+
+    document.getElementById("fb-texto").value = "";
+
+    const modalEl = document.getElementById("feedbackModal");
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    if (modal) modal.hide();
+  } catch (err) {
+    if (typeof window.mostrarToast === "function") {
+      window.mostrarToast("Erro ao enviar feedback: " + err.message, "danger");
+    } else {
+      alert("Erro ao enviar feedback: " + err.message);
+    }
+  }
+};

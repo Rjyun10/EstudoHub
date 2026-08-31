@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="css/root.css" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/splash.css" />
-    <link rel="stylesheet" href="css/timer.css">
+    <link rel="stylesheet" href="css/timer.css" />
   </head>
   <body class="bg-light">
     <div
@@ -37,7 +37,9 @@
       "
     >
       <div class="text-center">
-        <h1 class="logo-animado fw-bold text-white mb-2">Mural de Consquistas</h1>
+        <h1 class="logo-animado fw-bold text-white mb-2">
+          Mural de Consquistas
+        </h1>
         <div
           class="spinner-border text-light spinner-border-sm"
           role="status"
@@ -83,7 +85,9 @@
       aria-hidden="true"
     >
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border border-secondary-subtle shadow rounded-4">
+        <div
+          class="modal-content border border-secondary-subtle shadow rounded-4"
+        >
           <div class="modal-header border-0 pb-0">
             <h5 class="modal-title fw-bold">Compartilhar Conquista</h5>
             <button
@@ -207,18 +211,39 @@
     </div>
 
     <!-- Modal de Confirmação de Exclusão -->
-    <div class="modal fade" id="modalConfirmarExclusao" tabindex="-1" aria-hidden="true">
+    <div
+      class="modal fade"
+      id="modalConfirmarExclusao"
+      tabindex="-1"
+      aria-hidden="true"
+    >
       <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content border border-secondary-subtle shadow-lg rounded-4">
+        <div
+          class="modal-content border border-secondary-subtle shadow-lg rounded-4"
+        >
           <div class="modal-body text-center p-4">
             <div class="text-danger mb-2">
               <i class="bi bi-exclamation-triangle-fill display-5"></i>
             </div>
             <h6 class="fw-bold text-dark mb-2">Excluir conquista?</h6>
-            <p class="small text-muted mb-4">Esta ação não poderá ser desfeita.</p>
+            <p class="small text-muted mb-4">
+              Esta ação não poderá ser desfeita.
+            </p>
             <div class="d-flex gap-2 justify-content-center">
-              <button type="button" class="btn btn-light rounded-pill px-3 btn-sm" data-bs-dismiss="modal">Cancelar</button>
-              <button type="button" class="btn btn-danger rounded-pill px-3 btn-sm" id="btn-confirmar-exclusao">Excluir</button>
+              <button
+                type="button"
+                class="btn btn-light rounded-pill px-3 btn-sm"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger rounded-pill px-3 btn-sm"
+                id="btn-confirmar-exclusao"
+              >
+                Excluir
+              </button>
             </div>
           </div>
         </div>
@@ -226,13 +251,25 @@
     </div>
 
     <!-- Toast Container (Notificação flutuante) -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
-      <div id="toast-notificacao" class="toast align-items-center text-white bg-dark border border-secondary-subtle rounded-3 shadow" role="alert" aria-live="assertive" aria-atomic="true">
+    <div
+      class="toast-container position-fixed bottom-0 end-0 p-3"
+      style="z-index: 1100"
+    >
+      <div
+        id="toast-notificacao"
+        class="toast align-items-center text-white bg-dark border border-secondary-subtle rounded-3 shadow"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
         <div class="d-flex">
-          <div class="toast-body" id="toast-mensagem">
-            Mensagem aqui...
-          </div>
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+          <div class="toast-body" id="toast-mensagem">Mensagem aqui...</div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
         </div>
       </div>
     </div>
