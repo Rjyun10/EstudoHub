@@ -180,3 +180,8 @@ button:has(.bi-trash):hover {
   color: #ffffff !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
 }
+/* Correção do Hover para as opções do dropdown */
+#feedbackDropdownMenu .dropdown-item:hover {
+  background-color: var(--bg-color) !important;
+  color: var(--primary-color) !important;
+}
