@@ -152,7 +152,10 @@ async function checarProtecaoPagina() {
   if (!window._supabase) return;
 
   const path = window.location.pathname;
-  const isLoginPage = path.endsWith("login.html") || path.endsWith("auth.html") || path.endsWith("/");
+  
+  // Agora apenas páginas explicitamente de login/auth são públicas. 
+  // A raiz ("/") e o index.html passam a exigir login obrigatoriamente.
+  const isLoginPage = path.endsWith("login.html") || path.endsWith("auth.html");
 
   if (!isLoginPage) {
     const usuario = await window.verificarSessao();
