@@ -40,15 +40,15 @@ window.cadastrarUsuario = async function (email, senha, nome) {
     }
 
     notificar(
-      "Cadastro realizado! Verifique sua caixa de entrada para confirmar seu e-mail.",
+      "Cadastro realizado! Verifique seu e-mail para confirmar a conta.",
       "success",
     );
 
-    if (data.session) {
-      setTimeout(() => {
-        window.location.replace("index.html");
-      }, 1500);
-    }
+    // Como o e-mail precisa ser confirmado, mandamos o usuário para o login após 2 segundos
+    setTimeout(() => {
+      window.location.replace("login.html");
+    }, 2000);
+
   } catch (err) {
     console.error("Erro inesperado:", err);
     notificar(
