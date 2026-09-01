@@ -19,7 +19,6 @@ function exibirToast(mensagem, tipo = 'success') {
 
   toastBody.innerText = mensagem;
   
-  // Ajusta cor de fundo conforme tipo
   toastEl.className = `toast align-items-center text-white border-0 rounded-3 shadow bg-${tipo === 'success' ? 'success' : 'danger'}`;
 
   const bsToast = new bootstrap.Toast(toastEl, { delay: 3000 });
@@ -32,6 +31,26 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   userIdAtualGlobal = user.id;
   carregarMural(user.id);
+
+  // Controle manual e seguro do Dropdown de Conquistas
+  const btnConquista = document.getElementById("dropdownMenuTipo");
+  if (btnConquista) {
+    const dropdownConquistaInstance = new bootstrap.Dropdown(btnConquista);
+    btnConquista.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdownConquistaInstance.toggle();
+    });
+  }
+
+  // Controle manual e seguro do Dropdown de Feedback
+  const btnFeedback = document.getElementById("dropdownFeedbackBtn");
+  if (btnFeedback) {
+    const dropdownFeedbackInstance = new bootstrap.Dropdown(btnFeedback);
+    btnFeedback.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdownFeedbackInstance.toggle();
+    });
+  }
 
   // Escutador dos itens do Dropdown de Categoria (Conquistas)
   document.querySelectorAll(".item-categoria").forEach((item) => {
@@ -72,7 +91,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     formMural.addEventListener("submit", (e) => criarPostagem(e, user));
   }
 
-  // Evento do botão do modal de confirmação de exclusão
   const btnConfirmar = document.getElementById("btn-confirmar-exclusao");
   if (btnConfirmar) {
     btnConfirmar.addEventListener("click", executarExclusao);
@@ -131,7 +149,6 @@ async function carregarMural(userIdAtual) {
             </div>
             <h5 class="fw-bold text-dark mb-1">${post.titulo}</h5>
             
-            <!-- Link atualizado para o Perfil Público do autor -->
             <p class="text-secondary small mb-3">
               Por <a href="perfil-publico.html?id=${post.user_id}" class="text-decoration-none fw-bold text-primary">${nomeAutor}</a>
             </p>
@@ -277,8 +294,7 @@ window.enviarFeedback = async function () {
     return;
   }
 
-  // Formata a mensagem garantindo que a primeira letra seja maiúscula e o resto preserve o texto
-  const mensagem = mensagemInput.trim().charAt(0).toUpperCase() + mensagemInput.trim().slice(1);
+  const mensagem = formatarPrimeiraMaiuscula(mensagemInput);
 
   try {
     const {

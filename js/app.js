@@ -708,9 +708,8 @@ window.salvarNovaNota = async function () {
 window.enviarFeedback = async function () {
   const tipo = document.getElementById("fb-tipo").value;
   const mensagemInput = document.getElementById("fb-texto").value;
-  const mensagem = capitalizarPrimeiraLetra(mensagemInput);
-
-  if (!mensagem) {
+  
+  if (!mensagemInput || !mensagemInput.trim()) {
     if (typeof window.mostrarToast === "function") {
       window.mostrarToast("Digite sua mensagem antes de enviar.", "danger");
     } else {
@@ -718,6 +717,8 @@ window.enviarFeedback = async function () {
     }
     return;
   }
+
+  const mensagem = mensagemInput.trim().charAt(0).toUpperCase() + mensagemInput.trim().slice(1);
 
   try {
     const {
@@ -753,7 +754,6 @@ window.enviarFeedback = async function () {
     }
   }
 };
-
 // ==========================================
 // 4. CARREGAR E EXCLUIR "MINHAS NOTAS"
 // ==========================================

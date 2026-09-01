@@ -130,23 +130,26 @@
       💬
     </button>
 
-    <!-- Modal de Feedback -->
-    <div class="modal fade" id="feedbackModal" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content border border-secondary-subtle shadow">
-          <div class="modal-header">
+    <!-- Modal Feedback -->
+    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div
+          class="modal-content border border-secondary-subtle shadow rounded-4"
+        >
+          <div class="modal-header border-0 pb-0">
             <h5 class="modal-title fw-bold">Enviar Feedback</h5>
             <button
               type="button"
               class="btn-close"
               data-bs-dismiss="modal"
+              aria-label="Close"
             ></button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body p-4">
             <div class="mb-3">
               <label
                 for="dropdownFeedbackBtn"
-                class="form-label fw-semibold text-dark"
+                class="form-label small fw-bold text-secondary"
                 >Tipo de mensagem</label
               >
               <input type="hidden" id="fb-tipo" name="tipo" value="sugestao" />
@@ -155,13 +158,13 @@
                   class="btn dropdown-custom-btn w-100 text-start d-flex justify-content-between align-items-center py-2 px-3 rounded-3 border border-secondary-subtle bg-white text-dark fw-medium shadow-sm"
                   type="button"
                   id="dropdownFeedbackBtn"
+                  aria-expanded="false"
                 >
                   <span id="feedback-tipo-label" class="text-dark"
                     >Sugestão de melhoria</span
                   >
                   <i class="bi bi-chevron-down text-dark small"></i>
                 </button>
-
                 <ul
                   class="dropdown-menu w-100 shadow-sm border rounded-3 mt-1 p-1"
                   aria-labelledby="dropdownFeedbackBtn"
@@ -172,9 +175,8 @@
                       href="#"
                       data-valor="sugestao"
                       data-label="Sugestão de melhoria"
+                      >Sugestão de melhoria</a
                     >
-                      Sugestão de melhoria
-                    </a>
                   </li>
                   <li>
                     <a
@@ -182,9 +184,8 @@
                       href="#"
                       data-valor="erro"
                       data-label="Relatar um erro"
+                      >Relatar um erro</a
                     >
-                      Relatar um erro
-                    </a>
                   </li>
                   <li>
                     <a
@@ -192,15 +193,18 @@
                       href="#"
                       data-valor="elogio"
                       data-label="Elogio"
+                      >Elogio</a
                     >
-                      Elogio
-                    </a>
                   </li>
                 </ul>
               </div>
             </div>
             <div class="mb-3">
-              <label for="fb-texto" class="form-label">Sua Mensagem</label>
+              <label
+                for="fb-texto"
+                class="form-label small fw-bold text-secondary"
+                >Sua Mensagem</label
+              >
               <textarea
                 id="fb-texto"
                 name="mensagem"
@@ -210,17 +214,17 @@
               ></textarea>
             </div>
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer border-0 pt-0">
             <button
               type="button"
-              class="btn btn-secondary"
+              class="btn btn-secondary rounded-3 px-4"
               data-bs-dismiss="modal"
             >
               Cancelar
             </button>
             <button
               type="button"
-              class="btn btn-primary"
+              class="btn btn-primary rounded-3 px-4 fw-bold"
               onclick="enviarFeedback()"
             >
               Enviar Feedback
