@@ -169,6 +169,22 @@ async function checarProtecaoPagina() {
 
 // 6. INICIALIZAÇÃO E OUVINTES
 document.addEventListener("DOMContentLoaded", async () => {
+  // Tratamento especial para quando o usuário clica no link do e-mail de confirmação
+  // O Supabase injeta parâmetros na URL (como #access_token=... ou ?code=...)
+  const hash = window.location.hash;
+  const search = window.location.search;
+  
+  if (hash.includes("access_token") || search.includes("code=")) {
+    // Dá um breve instante para o cliente Supabase processar a URL automaticamente
+    setTimeout(async () => {
+      const usuario = await window.verificarSessao();
+      if (usuario) {
+        window.location.replace("index.html");
+        return;
+      }
+    }, 1000);
+  }
+
   const autorizado = await checarProtecaoPagina();
   if (!autorizado) return;
 
@@ -177,12 +193,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   setInterval(registrarPresencaOnline, 2 * 60 * 1000);
 
   const path = window.location.pathname;
-  const isLoginPage = path.endsWith("login.html") || path.endsWith("auth.html") || path.endsWith("/");
+  const isLoginPage = path.endsWith("login.html") || path.endsWith("auth.html");
 
   // Ouve mudanças no estado de autenticação
   window._supabase.auth.onAuthStateChange((event, session) => {
-    if (event === "SIGNED_IN" && session && isLoginPage) {
-      window.location.replace("index.html");
+    if ((event === "SIGNED_IN" || event === "TOKEN_REFRESHED") && session) {
+      if (isLoginPage || path.endsWith("/")) {
+        window.location.replace("index.html");
+      }
     }
   });
 });
