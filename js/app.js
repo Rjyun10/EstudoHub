@@ -733,47 +733,24 @@ window.salvarNovaNota = async function () {
 // ==========================================
 // 3. ENVIAR FEEDBACK
 // ==========================================
-document.addEventListener("click", (e) => {
-  const btn = e.target.closest("#dropdownFeedbackBtn");
-  if (btn) {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    // Procura explicitamente o ul.dropdown-menu dentro do container pai
-    const dropdownContainer = btn.closest(".dropdown");
-    const menu = dropdownContainer ? dropdownContainer.querySelector(".dropdown-menu") : null;
-    
-    if (menu) {
-      document.querySelectorAll(".dropdown-menu.show").forEach((m) => {
-        if (m !== menu) m.classList.remove("show");
-      });
-      menu.classList.toggle("show");
-    }
-    return;
-  }
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".item-feedback").forEach((item) => {
+    item.addEventListener("click", (e) => {
+      e.preventDefault();
+      const valor = item.getAttribute("data-valor");
+      const label = item.getAttribute("data-label");
+      
+      const inputTipo = document.getElementById("fb-tipo");
+      const labelTipo = document.getElementById("feedback-tipo-label");
 
-  const item = e.target.closest(".item-feedback");
-  if (item) {
-    e.preventDefault();
-    const valor = item.getAttribute("data-valor");
-    const label = item.getAttribute("data-label");
-    
-    const inputTipo = document.getElementById("fb-tipo");
-    const labelTipo = document.getElementById("feedback-tipo-label");
-
-    if (inputTipo) inputTipo.value = valor;
-    if (labelTipo) labelTipo.innerText = label;
-    
-    const menu = item.closest(".dropdown-menu");
-    if (menu) menu.classList.remove("show");
-    return;
-  }
-
-  if (!e.target.closest(".dropdown")) {
-    document.querySelectorAll(".dropdown-menu.show").forEach((m) => {
-      m.classList.remove("show");
+      if (inputTipo) inputTipo.value = valor;
+      if (labelTipo) labelTipo.innerText = label;
+      
+      // Fecha o dropdown após selecionar
+      const menu = item.closest(".dropdown-menu");
+      if (menu) menu.classList.remove("show");
     });
-  }
+  });
 });
 
 window.enviarFeedback = async function () {
@@ -833,6 +810,7 @@ window.enviarFeedback = async function () {
     }
   }
 };
+
 // ==========================================
 // 4. CARREGAR E EXCLUIR "MINHAS NOTAS"
 // ==========================================
