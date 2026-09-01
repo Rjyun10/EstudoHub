@@ -146,23 +146,61 @@
             ></button>
           </div>
           <div class="modal-body p-4">
-            <div class="mb-3">
+            <div class="mb-3 position-relative">
               <label
-                for="fb-tipo"
+                for="feedbackToggleBtn"
                 class="form-label small fw-bold text-secondary"
                 >Tipo de mensagem</label
               >
-              <select
-                id="fb-tipo"
-                name="tipo"
-                class="form-select py-2 px-3 rounded-3 border border-secondary-subtle bg-white text-dark fw-medium shadow-sm"
-              >
-                <option value="sugestao" selected>Sugestão de melhoria</option>
-                <option value="erro">Relatar um erro</option>
-                <option value="elogio">Elogio</option>
-              </select>
-            </div>
+              <input type="hidden" id="fb-tipo" name="tipo" value="sugestao" />
 
+              <!-- Botão com o seu estilo original -->
+              <button
+                class="btn w-100 text-start d-flex justify-content-between align-items-center py-2 px-3 rounded-3 border border-secondary-subtle bg-white text-dark fw-medium shadow-sm"
+                type="button"
+                id="feedbackToggleBtn"
+              >
+                <span id="feedback-tipo-label" class="text-dark"
+                  >Sugestão de melhoria</span
+                >
+                <span class="text-secondary small">▼</span>
+              </button>
+
+              <!-- Lista de opções estilizada -->
+              <div
+                id="feedbackDropdownMenu"
+                class="shadow-sm border rounded-3 mt-1 p-1 bg-white w-100"
+                style="
+                  display: none;
+                  position: absolute;
+                  top: 100%;
+                  left: 0;
+                  z-index: 1056;
+                "
+              >
+                <a
+                  class="dropdown-item rounded-2 py-2 text-dark fw-medium item-feedback d-block text-decoration-none px-3"
+                  href="#"
+                  data-valor="sugestao"
+                  data-label="Sugestão de melhoria"
+                  >Sugestão de melhoria</a
+                >
+                <a
+                  class="dropdown-item rounded-2 py-2 text-dark fw-medium item-feedback d-block text-decoration-none px-3"
+                  href="#"
+                  data-valor="erro"
+                  data-label="Relatar um erro"
+                  >Relatar um erro</a
+                >
+                <a
+                  class="dropdown-item rounded-2 py-2 text-dark fw-medium item-feedback d-block text-decoration-none px-3"
+                  href="#"
+                  data-valor="elogio"
+                  data-label="Elogio"
+                  >Elogio</a
+                >
+              </div>
+            </div>
             <div class="mb-3">
               <label
                 for="fb-texto"

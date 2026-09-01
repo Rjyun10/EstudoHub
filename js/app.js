@@ -10,26 +10,37 @@ window.notaComentariosId = null;
 // TRATAMENTO GLOBAL DE DROPDOWNS E MODAIS
 // ==========================================
 document.addEventListener("click", (e) => {
-  const btnDropdown = e.target.closest(".dropdown-toggle, #dropdownFeedbackBtn, #dropdownMenuTipo");
+  const btnDropdown = e.target.closest(
+    ".dropdown-toggle, #dropdownFeedbackBtn, #dropdownMenuTipo",
+  );
   if (btnDropdown) {
     e.preventDefault();
     e.stopPropagation();
-    
+
     const dropdownContainer = btnDropdown.closest(".dropdown");
-    const menu = dropdownContainer ? dropdownContainer.querySelector(".dropdown-menu") : null;
-    
+    const menu = dropdownContainer
+      ? dropdownContainer.querySelector(".dropdown-menu")
+      : null;
+
     if (menu) {
       document.querySelectorAll(".dropdown-menu.show").forEach((m) => {
         if (m !== menu) m.classList.remove("show");
       });
-      
+
       menu.classList.toggle("show");
-      btnDropdown.setAttribute("aria-expanded", menu.classList.contains("show"));
+      btnDropdown.setAttribute(
+        "aria-expanded",
+        menu.classList.contains("show"),
+      );
     }
   } else if (!e.target.closest(".dropdown")) {
     document.querySelectorAll(".dropdown-menu.show").forEach((m) => {
       m.classList.remove("show");
-      const toggleBtn = m.closest(".dropdown")?.querySelector(".dropdown-toggle, #dropdownFeedbackBtn, #dropdownMenuTipo");
+      const toggleBtn = m
+        .closest(".dropdown")
+        ?.querySelector(
+          ".dropdown-toggle, #dropdownFeedbackBtn, #dropdownMenuTipo",
+        );
       if (toggleBtn) toggleBtn.setAttribute("aria-expanded", "false");
     });
   }
@@ -432,7 +443,7 @@ window.carregarComentarios = async function (noteId) {
         );
         const autorNome = perfisMap.get(c.user_id) || "Estudante";
         const eMeuComentario = user && user.id === c.user_id;
-        
+
         // Formata o texto para iniciar com letra maiúscula
         const textoFormatado = formatarPrimeiraLetra(c.texto);
 
@@ -478,7 +489,7 @@ window.enviarComentario = async function () {
   const input =
     document.getElementById("input-comentario") ||
     document.getElementById("texto-comentario");
-  
+
   let texto = input?.value.trim();
   if (!texto || !window.notaComentariosId) return;
 
@@ -771,7 +782,7 @@ window.enviarFeedback = async function () {
 
   const tipo = tipoInput.value;
   const textoPuro = mensagemInput.value;
-  
+
   if (!textoPuro || !textoPuro.trim()) {
     if (typeof window.mostrarToast === "function") {
       window.mostrarToast("Digite sua mensagem antes de enviar.", "danger");
@@ -781,10 +792,13 @@ window.enviarFeedback = async function () {
     return;
   }
 
-  const mensagem = textoPuro.trim().charAt(0).toUpperCase() + textoPuro.trim().slice(1);
+  const mensagem =
+    textoPuro.trim().charAt(0).toUpperCase() + textoPuro.trim().slice(1);
 
   try {
-    const { data: { user } } = await window._supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await window._supabase.auth.getUser();
 
     const { error } = await window._supabase.from("feedbacks").insert([
       {
@@ -806,7 +820,8 @@ window.enviarFeedback = async function () {
 
     const modalEl = document.getElementById("feedbackModal");
     if (modalEl) {
-      const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+      const modal =
+        bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
       modal.hide();
     }
   } catch (err) {
@@ -818,6 +833,45 @@ window.enviarFeedback = async function () {
     }
   }
 };
+// ==========================================
+// CONTROLE DO DROPDOWN DE FEEDBACK
+// ==========================================
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("#feedbackToggleBtn");
+  const menu = document.getElementById("feedbackDropdownMenu");
+  if (!menu) return;
+
+  if (btn) {
+    e.preventDefault();
+    e.stopPropagation();
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+    return;
+  }
+
+  const item = e.target.closest(".item-feedback");
+  if (item) {
+    e.preventDefault();
+    const valor = item.getAttribute("data-valor");
+    const label = item.getAttribute("data-label");
+
+    const inputTipo = document.getElementById("fb-tipo");
+    const labelTipo = document.getElementById("feedback-tipo-label");
+
+    if (inputTipo) inputTipo.value = valor;
+    if (labelTipo) labelTipo.innerText = label;
+
+    menu.style.display = "none";
+    return;
+  }
+
+  // Fecha se clicar fora do componente
+  if (
+    !e.target.closest("#feedbackToggleBtn") &&
+    !e.target.closest("#feedbackDropdownMenu")
+  ) {
+    menu.style.display = "none";
+  }
+});
 // ==========================================
 // 4. CARREGAR E EXCLUIR "MINHAS NOTAS"
 // ==========================================
