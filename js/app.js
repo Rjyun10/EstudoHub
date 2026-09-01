@@ -704,12 +704,34 @@ window.salvarNovaNota = async function () {
 // ==========================================
 // 3. ENVIAR FEEDBACK
 // ==========================================
+document.addEventListener("DOMContentLoaded", () => {
+  // Inicializa o ouvinte dos itens do dropdown de feedback globalmente
+  document.querySelectorAll(".item-feedback").forEach((item) => {
+    item.addEventListener("click", (e) => {
+      e.preventDefault();
+      const valor = item.getAttribute("data-valor");
+      const label = item.getAttribute("data-label");
+      
+      const inputTipo = document.getElementById("fb-tipo");
+      const labelTipo = document.getElementById("feedback-tipo-label");
 
+      if (inputTipo) inputTipo.value = valor;
+      if (labelTipo) labelTipo.innerText = label;
+    });
+  });
+});
+
+// Função global para enviar o feedback
 window.enviarFeedback = async function () {
-  const tipo = document.getElementById("fb-tipo").value;
-  const mensagemInput = document.getElementById("fb-texto").value;
+  const tipoInput = document.getElementById("fb-tipo");
+  const mensagemInput = document.getElementById("fb-texto");
+
+  if (!tipoInput || !mensagemInput) return;
+
+  const tipo = tipoInput.value;
+  const textoPuro = mensagemInput.value;
   
-  if (!mensagemInput || !mensagemInput.trim()) {
+  if (!textoPuro || !textoPuro.trim()) {
     if (typeof window.mostrarToast === "function") {
       window.mostrarToast("Digite sua mensagem antes de enviar.", "danger");
     } else {
@@ -718,7 +740,7 @@ window.enviarFeedback = async function () {
     return;
   }
 
-  const mensagem = mensagemInput.trim().charAt(0).toUpperCase() + mensagemInput.trim().slice(1);
+  const mensagem = textoPuro.trim().charAt(0).toUpperCase() + textoPuro.trim().slice(1);
 
   try {
     const {
@@ -741,12 +763,15 @@ window.enviarFeedback = async function () {
       alert("Obrigado pelo seu feedback!");
     }
 
-    document.getElementById("fb-texto").value = "";
+    mensagemInput.value = "";
 
     const modalEl = document.getElementById("feedbackModal");
-    const modal = bootstrap.Modal.getInstance(modalEl);
-    if (modal) modal.hide();
+    if (modalEl) {
+      const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+      modal.hide();
+    }
   } catch (err) {
+    console.error("Erro ao enviar feedback:", err);
     if (typeof window.mostrarToast === "function") {
       window.mostrarToast("Erro ao enviar feedback: " + err.message, "danger");
     } else {
