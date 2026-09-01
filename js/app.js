@@ -734,6 +734,41 @@ window.salvarNovaNota = async function () {
 // 3. ENVIAR FEEDBACK
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
+  const dropdownBtn = document.getElementById("dropdownFeedbackBtn");
+  
+  if (dropdownBtn) {
+    dropdownBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const dropdownContainer = dropdownBtn.closest(".dropdown");
+      const menu = dropdownContainer ? dropdownContainer.querySelector(".dropdown-menu") : null;
+      
+      if (menu) {
+        // Fecha outros abertos
+        document.querySelectorAll(".dropdown-menu.show").forEach((m) => {
+          if (m !== menu) m.classList.remove("show");
+        });
+        
+        menu.classList.toggle("show");
+        const isOpen = menu.classList.contains("show");
+        dropdownBtn.setAttribute("aria-expanded", isOpen);
+      }
+    });
+
+    // Fecha ao clicar fora do dropdown
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest("#dropdownFeedbackBtn") && !e.target.closest(".dropdown-menu")) {
+        const menu = document.querySelector("#feedbackModal .dropdown-menu");
+        if (menu) {
+          menu.classList.remove("show");
+          dropdownBtn.setAttribute("aria-expanded", "false");
+        }
+      }
+    });
+  }
+});
+document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".item-feedback").forEach((item) => {
     item.addEventListener("click", (e) => {
       e.preventDefault();
