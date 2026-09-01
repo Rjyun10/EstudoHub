@@ -739,7 +739,10 @@ document.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
     
-    const menu = btn.nextElementSibling;
+    // Procura explicitamente o ul.dropdown-menu dentro do container pai
+    const dropdownContainer = btn.closest(".dropdown");
+    const menu = dropdownContainer ? dropdownContainer.querySelector(".dropdown-menu") : null;
+    
     if (menu) {
       document.querySelectorAll(".dropdown-menu.show").forEach((m) => {
         if (m !== menu) m.classList.remove("show");
