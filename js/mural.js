@@ -267,9 +267,8 @@ async function alternarCurtida(postId, userId, jaCurtiu) {
 window.enviarFeedback = async function () {
   const tipo = document.getElementById("fb-tipo").value;
   const mensagemInput = document.getElementById("fb-texto").value;
-  const mensagem = formatarPrimeiraMaiuscula(mensagemInput);
-
-  if (!mensagem) {
+  
+  if (!mensagemInput || !mensagemInput.trim()) {
     if (typeof window.mostrarToast === "function") {
       window.mostrarToast("Digite sua mensagem antes de enviar.", "danger");
     } else {
@@ -277,6 +276,9 @@ window.enviarFeedback = async function () {
     }
     return;
   }
+
+  // Formata a mensagem garantindo que a primeira letra seja maiúscula e o resto preserve o texto
+  const mensagem = mensagemInput.trim().charAt(0).toUpperCase() + mensagemInput.trim().slice(1);
 
   try {
     const {
