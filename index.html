@@ -146,60 +146,62 @@
             ></button>
           </div>
           <div class="modal-body p-4">
-            <div class="mb-3">
+            <div class="mb-3 position-relative">
               <label
                 for="dropdownFeedbackBtn"
                 class="form-label small fw-bold text-secondary"
                 >Tipo de mensagem</label
               >
               <input type="hidden" id="fb-tipo" name="tipo" value="sugestao" />
-              <div class="dropdown">
-                <button
-                  class="btn w-100 text-start d-flex justify-content-between align-items-center py-2 px-3 rounded-3 border border-secondary-subtle bg-white text-dark fw-medium shadow-sm dropdown-toggle"
-                  type="button"
-                  id="dropdownFeedbackBtn"
-                  data-bs-toggle="dropdown"
-                  data-bs-display="static"
-                  aria-expanded="false"
+
+              <!-- Botão que simula o select -->
+              <button
+                class="btn w-100 text-start d-flex justify-content-between align-items-center py-2 px-3 rounded-3 border border-secondary-subtle bg-white text-dark fw-medium shadow-sm"
+                type="button"
+                id="dropdownFeedbackBtn"
+              >
+                <span id="feedback-tipo-label" class="text-dark"
+                  >Sugestão de melhoria</span
                 >
-                  <span id="feedback-tipo-label" class="text-dark"
-                    >Sugestão de melhoria</span
-                  >
-                </button>
-                <ul
-                  class="dropdown-menu w-100 shadow-sm border rounded-3 mt-1 p-1"
-                  aria-labelledby="dropdownFeedbackBtn"
+                <span>▼</span>
+              </button>
+
+              <!-- Menu personalizado que abre por JS puro -->
+              <div
+                id="customFeedbackMenu"
+                class="dropdown-menu w-100 shadow-sm border rounded-3 mt-1 p-1 bg-white"
+                style="
+                  display: none;
+                  position: absolute;
+                  top: 100%;
+                  left: 0;
+                  z-index: 1056;
+                "
+              >
+                <a
+                  class="dropdown-item rounded-2 py-2 text-dark fw-medium item-feedback d-block text-decoration-none px-3"
+                  href="#"
+                  data-valor="sugestao"
+                  data-label="Sugestão de melhoria"
+                  >Sugestão de melhoria</a
                 >
-                  <li>
-                    <a
-                      class="dropdown-item rounded-2 py-2 text-dark fw-medium item-feedback"
-                      href="#"
-                      data-valor="sugestao"
-                      data-label="Sugestão de melhoria"
-                      >Sugestão de melhoria</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      class="dropdown-item rounded-2 py-2 text-dark fw-medium item-feedback"
-                      href="#"
-                      data-valor="erro"
-                      data-label="Relatar um erro"
-                      >Relatar um erro</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      class="dropdown-item rounded-2 py-2 text-dark fw-medium item-feedback"
-                      href="#"
-                      data-valor="elogio"
-                      data-label="Elogio"
-                      >Elogio</a
-                    >
-                  </li>
-                </ul>
+                <a
+                  class="dropdown-item rounded-2 py-2 text-dark fw-medium item-feedback d-block text-decoration-none px-3"
+                  href="#"
+                  data-valor="erro"
+                  data-label="Relatar um erro"
+                  >Relatar um erro</a
+                >
+                <a
+                  class="dropdown-item rounded-2 py-2 text-dark fw-medium item-feedback d-block text-decoration-none px-3"
+                  href="#"
+                  data-valor="elogio"
+                  data-label="Elogio"
+                  >Elogio</a
+                >
               </div>
             </div>
+
             <div class="mb-3">
               <label
                 for="fb-texto"

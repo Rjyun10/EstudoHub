@@ -731,26 +731,36 @@ window.salvarNovaNota = async function () {
 };
 
 // ==========================================
-// 3. ENVIAR FEEDBACK
+// 3. ENVIAR FEEDBACK (Lógica Customizada)
 // ==========================================
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".item-feedback").forEach((item) => {
-    item.addEventListener("click", (e) => {
-      e.preventDefault();
-      const valor = item.getAttribute("data-valor");
-      const label = item.getAttribute("data-label");
-      
-      const inputTipo = document.getElementById("fb-tipo");
-      const labelTipo = document.getElementById("feedback-tipo-label");
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("#dropdownFeedbackBtn");
+  const menu = document.getElementById("customFeedbackMenu");
+  if (!menu) return;
 
-      if (inputTipo) inputTipo.value = valor;
-      if (labelTipo) labelTipo.innerText = label;
-      
-      // Fecha o dropdown após selecionar
-      const menu = item.closest(".dropdown-menu");
-      if (menu) menu.classList.remove("show");
-    });
-  });
+  if (btn) {
+    e.preventDefault();
+    e.stopPropagation();
+    // Alterna entre mostrar e esconder
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+    return;
+  }
+
+  // Se clicou em uma das opções do menu
+  const item = e.target.closest(".item-feedback");
+  if (item) {
+    e.preventDefault();
+    const valor = item.getAttribute("data-valor");
+    const label = item.getAttribute("data-label");
+
+    document.getElementById("fb-tipo").value = valor;
+    document.getElementById("feedback-tipo-label").innerText = label;
+    menu.style.display = "none";
+    return;
+  }
+
+  // Se clicar em qualquer outro lugar da tela, fecha o menu
+  menu.style.display = "none";
 });
 
 window.enviarFeedback = async function () {
@@ -774,9 +784,7 @@ window.enviarFeedback = async function () {
   const mensagem = textoPuro.trim().charAt(0).toUpperCase() + textoPuro.trim().slice(1);
 
   try {
-    const {
-      data: { user },
-    } = await window._supabase.auth.getUser();
+    const { data: { user } } = await window._supabase.auth.getUser();
 
     const { error } = await window._supabase.from("feedbacks").insert([
       {
@@ -810,7 +818,6 @@ window.enviarFeedback = async function () {
     }
   }
 };
-
 // ==========================================
 // 4. CARREGAR E EXCLUIR "MINHAS NOTAS"
 // ==========================================
