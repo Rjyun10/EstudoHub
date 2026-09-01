@@ -10,37 +10,26 @@ window.notaComentariosId = null;
 // TRATAMENTO GLOBAL DE DROPDOWNS E MODAIS
 // ==========================================
 document.addEventListener("click", (e) => {
-  const btnDropdown = e.target.closest(
-    ".dropdown-toggle, #dropdownFeedbackBtn, #dropdownMenuTipo",
-  );
+  const btnDropdown = e.target.closest(".dropdown-toggle, #dropdownFeedbackBtn, #dropdownMenuTipo");
   if (btnDropdown) {
     e.preventDefault();
     e.stopPropagation();
-
+    
     const dropdownContainer = btnDropdown.closest(".dropdown");
-    const menu = dropdownContainer
-      ? dropdownContainer.querySelector(".dropdown-menu")
-      : null;
-
+    const menu = dropdownContainer ? dropdownContainer.querySelector(".dropdown-menu") : null;
+    
     if (menu) {
       document.querySelectorAll(".dropdown-menu.show").forEach((m) => {
         if (m !== menu) m.classList.remove("show");
       });
-
+      
       menu.classList.toggle("show");
-      btnDropdown.setAttribute(
-        "aria-expanded",
-        menu.classList.contains("show"),
-      );
+      btnDropdown.setAttribute("aria-expanded", menu.classList.contains("show"));
     }
   } else if (!e.target.closest(".dropdown")) {
     document.querySelectorAll(".dropdown-menu.show").forEach((m) => {
       m.classList.remove("show");
-      const toggleBtn = m
-        .closest(".dropdown")
-        ?.querySelector(
-          ".dropdown-toggle, #dropdownFeedbackBtn, #dropdownMenuTipo",
-        );
+      const toggleBtn = m.closest(".dropdown")?.querySelector(".dropdown-toggle, #dropdownFeedbackBtn, #dropdownMenuTipo");
       if (toggleBtn) toggleBtn.setAttribute("aria-expanded", "false");
     });
   }
@@ -50,6 +39,7 @@ document.addEventListener("click", (e) => {
 // 1. CARREGAR E RENDERIZAR FEED / PESQUISA
 // ==========================================
 
+// Gerencia a troca visual dos botões de filtro e executa a busca
 window.alternarFiltroFeed = function (tipo) {
   const btnTodos = document.getElementById("btn-feed-todos");
   const btnFavs = document.getElementById("btn-feed-favs");
@@ -74,6 +64,7 @@ window.carregarFeed = async function () {
       data: { user },
     } = await window._supabase.auth.getUser();
 
+    // 1. Busca todas as notas
     const { data: notes, error: notesErr } = await window._supabase
       .from("notes")
       .select("*")
@@ -81,12 +72,14 @@ window.carregarFeed = async function () {
 
     if (notesErr) throw notesErr;
 
+    // 2. Busca perfis cadastrados
     const { data: profiles, error: profErr } = await window._supabase
       .from("profiles")
       .select("id, nome, bio, instagram, avatar_url, meta");
 
     if (profErr) throw profErr;
 
+    // 3. Busca Likes, Favoritos e Contagem
     const { data: likesData } = await window._supabase
       .from("likes")
       .select("note_id, user_id");
@@ -121,6 +114,7 @@ window.carregarFeed = async function () {
     window.todosOsPerfis = profiles || [];
     const perfisMap = new Map(window.todosOsPerfis.map((p) => [p.id, p]));
 
+    // Vincula autor e dados de interacoes
     window.todasAsNotas = (notes || []).map((nota) => {
       const perfilAutor = perfisMap.get(nota.user_id);
       return {
@@ -155,6 +149,7 @@ window.renderizarResultados = function (listaNotas, listaPerfis) {
 
   let html = "";
 
+  // CARDS DE PERFIS
   if (listaPerfis.length > 0) {
     html += `<div class="col-12"><h5 class="fw-bold text-primary mb-3">👤 Perfis Encontrados</h5></div>`;
     html += listaPerfis
@@ -187,6 +182,7 @@ window.renderizarResultados = function (listaNotas, listaPerfis) {
     }
   }
 
+  // CARDS DE MATÉRIAS E RESUMOS
   html += listaNotas
     .map((nota) => {
       const dataFormatada = new Date(nota.created_at).toLocaleDateString(
@@ -220,6 +216,7 @@ window.renderizarResultados = function (listaNotas, listaPerfis) {
             ${conteudoHTML}
           </div>
 
+          <!-- AÇÕES SOCIAL -->
           <div class="px-3 py-2 bg-light border-top border-bottom d-flex justify-content-between align-items-center small">
             <button class="btn btn-sm ${isLiked ? "btn-danger" : "btn-outline-danger"} border-0" onclick="window.toggleLike('${nota.id}')">
               ❤️ ${nota.likes_count}
@@ -229,6 +226,7 @@ window.renderizarResultados = function (listaNotas, listaPerfis) {
             </button>
           </div>
 
+          <!-- RODAPÉ ATUALIZADO COM AUTOR, DATA E INSTAGRAM -->
           <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between align-items-center">
             <a href="perfil-publico.html?id=${nota.user_id}" class="text-decoration-none text-muted small text-truncate me-2" style="max-width: 130px;">
               Por: <strong class="text-dark">${nota.autor_nome}</strong>
@@ -252,6 +250,7 @@ window.renderizarResultados = function (listaNotas, listaPerfis) {
   container.innerHTML = html;
 };
 
+// EXIBIR APENAS FAVORITOS NA TELA
 window.filtrarFavoritos = function () {
   const notasFavoritas = window.todasAsNotas.filter((nota) =>
     window.meusFavoritos.has(nota.id),
@@ -259,6 +258,7 @@ window.filtrarFavoritos = function () {
   window.renderizarResultados(notasFavoritas, []);
 };
 
+// FILTRO EM TEMPO REAL
 window.filtrarFeed = function (termoBusca) {
   const termo = (
     termoBusca !== undefined
@@ -290,9 +290,344 @@ window.filtrarFeed = function (termoBusca) {
 };
 
 // ==========================================
-// 2. SALVAR NOVA NOTA
+// FUNÇÕES DE LIKES, FAVORITOS E COMENTÁRIOS
 // ==========================================
 
+window.toggleLike = async function (noteId) {
+  try {
+    const {
+      data: { user },
+    } = await window._supabase.auth.getUser();
+    if (!user) return alert("Faça login para curtir.");
+
+    if (window.meusLikes.has(noteId)) {
+      await window._supabase
+        .from("likes")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("note_id", noteId);
+      window.meusLikes.delete(noteId);
+    } else {
+      await window._supabase
+        .from("likes")
+        .insert({ user_id: user.id, note_id: noteId });
+      window.meusLikes.add(noteId);
+    }
+
+    // Atualiza contagem localmente
+    const nota = window.todasAsNotas.find((n) => n.id === noteId);
+    if (nota) {
+      nota.likes_count += window.meusLikes.has(noteId) ? 1 : -1;
+    }
+
+    window.renderizarResultados(window.todasAsNotas, []);
+  } catch (err) {
+    console.error("Erro ao curtir:", err);
+  }
+};
+
+window.toggleFavorito = async function (noteId) {
+  try {
+    const {
+      data: { user },
+    } = await window._supabase.auth.getUser();
+    if (!user) return alert("Faça login para favoritar.");
+
+    if (window.meusFavoritos.has(noteId)) {
+      await window._supabase
+        .from("favorites")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("note_id", noteId);
+      window.meusFavoritos.delete(noteId);
+      if (typeof window.mostrarToast === "function")
+        window.mostrarToast("Removido dos salvos.", "info");
+    } else {
+      await window._supabase
+        .from("favorites")
+        .insert({ user_id: user.id, note_id: noteId });
+      window.meusFavoritos.add(noteId);
+      if (typeof window.mostrarToast === "function")
+        window.mostrarToast("Salvo nos favoritos!", "success");
+    }
+
+    window.renderizarResultados(window.todasAsNotas, []);
+  } catch (err) {
+    console.error("Erro ao favoritar:", err);
+  }
+};
+
+// ==========================================
+// SEÇÃO DE COMENTÁRIOS (SEM ALERTS NATIVOS)
+// ==========================================
+
+// Função auxiliar para deixar a primeira letra maiúscula
+function formatarPrimeiraLetra(texto) {
+  if (!texto) return "";
+  return texto.charAt(0).toUpperCase() + texto.slice(1);
+}
+
+window.abrirComentarios = async function (noteId) {
+  window.notaComentariosId = noteId;
+  const modalEl =
+    document.getElementById("modalComentarios") ||
+    document.getElementById("commentsModal");
+  if (!modalEl) return;
+
+  // Adiciona o ouvinte para remover o foco ao fechar, evitando o aviso de aria-hidden
+  if (!modalEl.dataset.hasBlurListener) {
+    modalEl.addEventListener("hide.bs.modal", () => {
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+    });
+    modalEl.dataset.hasBlurListener = "true";
+  }
+
+  const modal =
+    bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+  modal.show();
+  await window.carregarComentarios(noteId);
+};
+
+window.carregarComentarios = async function (noteId) {
+  const container = document.getElementById("lista-comentarios");
+  if (!container) return;
+
+  container.innerHTML = `<p class="text-muted text-center py-2">Carregando...</p>`;
+
+  try {
+    const {
+      data: { user },
+    } = await window._supabase.auth.getUser();
+
+    // 1. Busca os comentários da nota
+    const { data: comments, error: commErr } = await window._supabase
+      .from("comments")
+      .select("id, texto, created_at, user_id")
+      .eq("note_id", noteId)
+      .order("created_at", { ascending: true });
+
+    if (commErr) throw commErr;
+
+    if (!comments || comments.length === 0) {
+      container.innerHTML = `<p class="text-muted text-center py-2 small">Nenhum comentário ainda. Seja o primeiro!</p>`;
+      return;
+    }
+
+    // 2. Busca os perfis de quem comentou
+    const userIds = [...new Set(comments.map((c) => c.user_id))];
+    const { data: profiles } = await window._supabase
+      .from("profiles")
+      .select("id, nome")
+      .in("id", userIds);
+
+    const perfisMap = new Map((profiles || []).map((p) => [p.id, p.nome]));
+
+    // 3. Renderiza a lista na tela
+    container.innerHTML = comments
+      .map((c) => {
+        const dataFormatada = new Date(c.created_at).toLocaleDateString(
+          "pt-BR",
+        );
+        const autorNome = perfisMap.get(c.user_id) || "Estudante";
+        const eMeuComentario = user && user.id === c.user_id;
+        
+        // Formata o texto para iniciar com letra maiúscula
+        const textoFormatado = formatarPrimeiraLetra(c.texto);
+
+        return `
+          <div class="bg-light p-2 rounded mb-2 border-start border-3 border-primary position-relative" id="comentario-item-${c.id}">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <strong class="small text-dark">${autorNome}</strong>
+              <div class="d-flex align-items-center gap-2">
+                <small class="text-muted" style="font-size: 0.75rem;">${dataFormatada}</small>
+                ${
+                  eMeuComentario
+                    ? `
+                    <button class="btn btn-link btn-sm p-0 text-secondary text-decoration-none" onclick="window.alternarEdicaoComentario('${c.id}')" title="Editar">✏️</button>
+                    <button class="btn btn-link btn-sm p-0 text-danger text-decoration-none" onclick="window.excluirComentario('${c.id}')" title="Excluir">🗑️</button>
+                  `
+                    : ""
+                }
+              </div>
+            </div>
+            
+            <!-- Modo Visualização -->
+            <p class="mb-0 small text-secondary" id="texto-comentario-${c.id}">${textoFormatado}</p>
+
+            <!-- Modo Edição Integrado no Card -->
+            <div id="form-editar-comentario-${c.id}" class="d-none mt-2">
+              <textarea id="input-editar-comentario-${c.id}" class="form-control form-control-sm mb-2" rows="2">${c.texto}</textarea>
+              <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-sm btn-outline-secondary" onclick="window.alternarEdicaoComentario('${c.id}')">Cancelar</button>
+                <button class="btn btn-sm btn-primary" onclick="window.salvarEdicaoComentario('${c.id}')">Salvar</button>
+              </div>
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+  } catch (err) {
+    console.error("Erro ao carregar comentários:", err);
+    container.innerHTML = `<p class="text-danger text-center py-2 small">Erro ao carregar comentários.</p>`;
+  }
+};
+
+window.enviarComentario = async function () {
+  const input =
+    document.getElementById("input-comentario") ||
+    document.getElementById("texto-comentario");
+  
+  let texto = input?.value.trim();
+  if (!texto || !window.notaComentariosId) return;
+
+  // Opcional: já envia com a primeira letra maiúscula se quiser
+  texto = formatarPrimeiraLetra(texto);
+
+  try {
+    const {
+      data: { user },
+    } = await window._supabase.auth.getUser();
+
+    if (!user) {
+      if (typeof window.mostrarToast === "function") {
+        window.mostrarToast("Faça login para comentar.", "warning");
+      }
+      return;
+    }
+
+    const { error } = await window._supabase.from("comments").insert([
+      {
+        user_id: user.id,
+        note_id: window.notaComentariosId,
+        texto: texto,
+      },
+    ]);
+
+    if (error) throw error;
+
+    input.value = "";
+
+    // Atualiza contagem local de comentários
+    const nota = window.todasAsNotas?.find(
+      (n) => n.id === window.notaComentariosId,
+    );
+    if (nota) nota.comments_count = (nota.comments_count || 0) + 1;
+
+    if (typeof window.mostrarToast === "function") {
+      window.mostrarToast("Comentário enviado!", "success");
+    }
+
+    await window.carregarComentarios(window.notaComentariosId);
+    if (typeof window.renderizarResultados === "function") {
+      window.renderizarResultados(window.todasAsNotas, []);
+    }
+  } catch (err) {
+    if (typeof window.mostrarToast === "function") {
+      window.mostrarToast("Erro ao enviar: " + err.message, "danger");
+    }
+  }
+};
+
+// ==========================================
+// EDICÃO E EXCLUSÃO SEM ALERTS / PROMPTS
+// ==========================================
+
+// Alterna entre ver o texto e abrir a caixinha de edição integrada
+window.alternarEdicaoComentario = function (commentId) {
+  const pTexto = document.getElementById(`texto-comentario-${commentId}`);
+  const formEdicao = document.getElementById(
+    `form-editar-comentario-${commentId}`,
+  );
+
+  if (pTexto && formEdicao) {
+    pTexto.classList.toggle("d-none");
+    formEdicao.classList.toggle("d-none");
+  }
+};
+
+// Salva a edição do comentário diretamente no card
+window.salvarEdicaoComentario = async function (commentId) {
+  const input = document.getElementById(`input-editar-comentario-${commentId}`);
+  const novoTexto = input?.value.trim();
+
+  if (!novoTexto) {
+    if (typeof window.mostrarToast === "function") {
+      window.mostrarToast("O comentário não pode ficar vazio.", "warning");
+    }
+    return;
+  }
+
+  try {
+    const {
+      data: { user },
+    } = await window._supabase.auth.getUser();
+
+    // Atualiza garantindo a validação do user_id
+    const { data, error } = await window._supabase
+      .from("comments")
+      .update({ texto: novoTexto })
+      .eq("id", commentId)
+      .eq("user_id", user.id)
+      .select();
+
+    if (error) throw error;
+
+    // Se a query rodou mas não alterou nenhuma linha (bloqueio de RLS)
+    if (!data || data.length === 0) {
+      throw new Error(
+        "Permissão negada ou comentário não encontrado no banco.",
+      );
+    }
+
+    if (typeof window.mostrarToast === "function") {
+      window.mostrarToast("Comentário atualizado com sucesso!", "success");
+    }
+
+    // Recarrega os comentários para refletir a mudança
+    await window.carregarComentarios(window.notaComentariosId);
+  } catch (err) {
+    console.error("Erro ao editar comentário:", err);
+    if (typeof window.mostrarToast === "function") {
+      window.mostrarToast("Erro ao editar: " + err.message, "danger");
+    }
+  }
+};
+
+// Exclui diretamente usando o aviso do Toast do site
+window.excluirComentario = async function (commentId) {
+  try {
+    const { error } = await window._supabase
+      .from("comments")
+      .delete()
+      .eq("id", commentId);
+
+    if (error) throw error;
+
+    // Atualiza contagem local de comentários
+    const nota = window.todasAsNotas?.find(
+      (n) => n.id === window.notaComentariosId,
+    );
+    if (nota && nota.comments_count > 0) {
+      nota.comments_count -= 1;
+    }
+
+    if (typeof window.mostrarToast === "function") {
+      window.mostrarToast("Comentário removido com sucesso.", "info");
+    }
+
+    await window.carregarComentarios(window.notaComentariosId);
+    if (typeof window.renderizarResultados === "function") {
+      window.renderizarResultados(window.todasAsNotas, []);
+    }
+  } catch (err) {
+    if (typeof window.mostrarToast === "function") {
+      window.mostrarToast("Erro ao excluir: " + err.message, "danger");
+    }
+  }
+};
+// Função auxiliar para capitalizar a primeira letra
 function capitalizarPrimeiraLetra(texto) {
   if (!texto || typeof texto !== "string") return "";
   const limpo = texto.trim();
@@ -300,9 +635,14 @@ function capitalizarPrimeiraLetra(texto) {
   return limpo.charAt(0).toUpperCase() + limpo.slice(1);
 }
 
+// ==========================================
+// 2. SALVAR NOVA NOTA
+// ==========================================
+
 window.salvarNovaNota = async function () {
   const btn = document.getElementById("btn-salvar");
 
+  // Pegamos os valores e já aplicamos a capitalização da primeira letra
   const tituloInput = document.getElementById("nota-titulo").value;
   const materiaInput = document.getElementById("nota-materia").value;
   const textoInput = document.getElementById("nota-texto")?.value || "";
@@ -327,10 +667,8 @@ window.salvarNovaNota = async function () {
     return;
   }
 
-  if (btn) {
-    btn.disabled = true;
-    btn.innerText = "Publicando...";
-  }
+  btn.disabled = true;
+  btn.innerText = "Publicando...";
 
   try {
     const {
@@ -387,10 +725,8 @@ window.salvarNovaNota = async function () {
     }
     console.error(err);
   } finally {
-    if (btn) {
-      btn.disabled = false;
-      btn.innerText = "Publicar Material";
-    }
+    btn.disabled = false;
+    btn.innerText = "Publicar Material";
   }
 };
 
@@ -403,7 +739,7 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       const valor = item.getAttribute("data-valor");
       const label = item.getAttribute("data-label");
-
+      
       const inputTipo = document.getElementById("fb-tipo");
       const labelTipo = document.getElementById("feedback-tipo-label");
 
@@ -421,7 +757,7 @@ window.enviarFeedback = async function () {
 
   const tipo = tipoInput.value;
   const textoPuro = mensagemInput.value;
-
+  
   if (!textoPuro || !textoPuro.trim()) {
     if (typeof window.mostrarToast === "function") {
       window.mostrarToast("Digite sua mensagem antes de enviar.", "danger");
@@ -431,8 +767,7 @@ window.enviarFeedback = async function () {
     return;
   }
 
-  const mensagem =
-    textoPuro.trim().charAt(0).toUpperCase() + textoPuro.trim().slice(1);
+  const mensagem = textoPuro.trim().charAt(0).toUpperCase() + textoPuro.trim().slice(1);
 
   try {
     const {
@@ -459,8 +794,7 @@ window.enviarFeedback = async function () {
 
     const modalEl = document.getElementById("feedbackModal");
     if (modalEl) {
-      const modal =
-        bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+      const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
       modal.hide();
     }
   } catch (err) {
@@ -472,7 +806,6 @@ window.enviarFeedback = async function () {
     }
   }
 };
-
 // ==========================================
 // 4. CARREGAR E EXCLUIR "MINHAS NOTAS"
 // ==========================================
@@ -504,6 +837,7 @@ window.carregarMinhasNotas = async function (userId) {
           "pt-BR",
         );
 
+        // Aplica a capitalização também na exibição por segurança
         const materiaFormatada = capitalizarPrimeiraLetra(nota.materia || "");
         const tituloFormatado = capitalizarPrimeiraLetra(nota.titulo || "");
         const textoFormatado = capitalizarPrimeiraLetra(
@@ -531,7 +865,7 @@ window.carregarMinhasNotas = async function (userId) {
             </div>
             <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between align-items-center">
               <small class="text-muted">${dataFormatada}</small>
-              <button class="btn btn-outline-danger btn-sm" onclick="window.excluirNota('${nota.id}', '${nota.arquivo_url || ""}')">
+              <button class="btn btn-outline-danger btn-sm" onclick="excluirNota('${nota.id}', '${nota.arquivo_url || ""}')">
                 🗑️ Excluir
               </button>
             </div>
@@ -569,8 +903,7 @@ window.excluirNota = function (notaId, arquivoUrl) {
   const modalEl = document.getElementById("confirmDeleteModal");
   if (!modalEl) return;
 
-  const modal =
-    bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+  const modal = new bootstrap.Modal(modalEl);
   modal.show();
 };
 
@@ -867,7 +1200,6 @@ window.buscarUsuarios = function (termo) {
     }
   }, 300);
 };
-
 // ==========================================
 // 7. EDICÃO E ATUALIZAÇÃO DO PERFIL
 // ==========================================
@@ -954,6 +1286,7 @@ window.carregarPerfilPublico = async function () {
     const { data: currentUser } = await window._supabase.auth.getUser();
     const me = currentUser?.user;
 
+    // 1. Busca os dados do perfil
     const { data: perfil, error } = await window._supabase
       .from("profiles")
       .select("*")
@@ -962,6 +1295,7 @@ window.carregarPerfilPublico = async function () {
 
     if (error || !perfil) throw new Error("Perfil não encontrado.");
 
+    // Preenche as informações básicas
     document.getElementById("public-user-nome").innerText =
       perfil.nome || "Estudante";
     document.getElementById("public-user-bio").innerText = perfil.bio || "";
@@ -984,10 +1318,13 @@ window.carregarPerfilPublico = async function () {
       document.getElementById("public-user-avatar").src = perfil.avatar_url;
     }
 
+    // 2. Carrega as estatísticas (Notas, Seguidores, Seguindo)
     await window.carregarEstatisticasPublicas(perfilId);
 
+    // 3. Renderiza o botão de Seguir se não for o próprio usuário logado
     const btnArea = document.getElementById("area-btn-seguir");
     if (btnArea && me && me.id !== perfilId) {
+      // Verifica se já segue
       const { data: follow } = await window._supabase
         .from("follows")
         .select("id")
@@ -1004,6 +1341,7 @@ window.carregarPerfilPublico = async function () {
       `;
     }
 
+    // 4. Carrega os cadernos publicados deste usuário
     await window.carregarCadernosPublicos(perfilId);
   } catch (err) {
     console.error("Erro ao carregar perfil público:", err);
@@ -1012,16 +1350,19 @@ window.carregarPerfilPublico = async function () {
 
 window.carregarEstatisticasPublicas = async function (perfilId) {
   try {
+    // Conta publicações
     const { count: countNotas } = await window._supabase
       .from("notes")
       .select("id", { count: "exact", head: true })
       .eq("user_id", perfilId);
 
+    // Conta seguidores (quem segue este perfil)
     const { count: countSeguidores } = await window._supabase
       .from("follows")
       .select("id", { count: "exact", head: true })
       .eq("following_id", perfilId);
 
+    // Conta seguindo (quem este perfil segue)
     const { count: countSeguindo } = await window._supabase
       .from("follows")
       .select("id", { count: "exact", head: true })
@@ -1050,6 +1391,7 @@ window.toggleSeguir = async function (perfilId, jaSegue) {
     }
 
     if (jaSegue) {
+      // Deixar de seguir
       const { error } = await window._supabase
         .from("follows")
         .delete()
@@ -1060,6 +1402,7 @@ window.toggleSeguir = async function (perfilId, jaSegue) {
       if (typeof window.mostrarToast === "function")
         window.mostrarToast("Você deixou de seguir este usuário.", "info");
     } else {
+      // Seguir
       const { error } = await window._supabase
         .from("follows")
         .insert([{ follower_id: user.id, following_id: perfilId }]);
@@ -1069,6 +1412,7 @@ window.toggleSeguir = async function (perfilId, jaSegue) {
         window.mostrarToast("Agora você está seguindo!", "success");
     }
 
+    // Recarrega o perfil para atualizar o botão e a contagem de seguidores na hora
     await window.carregarPerfilPublico();
   } catch (err) {
     console.error("Erro ao seguir/deixar de seguir:", err);
@@ -1085,21 +1429,25 @@ window.carregarMinhasEstatisticas = async function () {
     } = await window._supabase.auth.getUser();
     if (!user) return;
 
+    // Total de Publicações do Usuário Logado
     const { count: countNotas } = await window._supabase
       .from("notes")
       .select("id", { count: "exact", head: true })
       .eq("user_id", user.id);
 
+    // Total de Seguidores
     const { count: countSeguidores } = await window._supabase
       .from("follows")
       .select("id", { count: "exact", head: true })
       .eq("following_id", user.id);
 
+    // Total de Pessoas que o Usuário Segue
     const { count: countSeguindo } = await window._supabase
       .from("follows")
       .select("id", { count: "exact", head: true })
       .eq("follower_id", user.id);
 
+    // Atualiza os elementos na tela
     const elNotas =
       document.getElementById("minhas-total-notas") ||
       document.getElementById("total-notas");
@@ -1117,9 +1465,10 @@ window.carregarMinhasEstatisticas = async function () {
     console.error("Erro ao carregar estatísticas do meu perfil:", err);
   }
 };
-
+// Trata a busca e garante que a linha do perfil existe no banco sem travar a aplicação
 async function garantirPerfilExistente(user) {
   try {
+    // Tenta buscar o perfil do usuário
     const { data: profile, error } = await window._supabase
       .from("profiles")
       .select("*")
@@ -1130,6 +1479,7 @@ async function garantirPerfilExistente(user) {
       console.warn("Aviso ao buscar perfil:", error.message);
     }
 
+    // Se não encontrou o perfil, cria um novo
     if (!profile) {
       const nomePadrao = user.user_metadata?.nome || user.email.split("@")[0];
 
