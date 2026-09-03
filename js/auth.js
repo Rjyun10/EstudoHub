@@ -16,6 +16,9 @@ window.cadastrarUsuario = async function (email, senha, nome) {
   try {
     if (!window._supabase) return;
 
+    // Define dinamicamente o link de redirecionamento para a pasta correta do EstudoHub
+    const redirectUrl = window.location.origin + "/EstudoHub/login.html";
+
     const { data, error } = await window._supabase.auth.signUp({
       email: email,
       password: senha,
@@ -23,6 +26,7 @@ window.cadastrarUsuario = async function (email, senha, nome) {
         data: {
           nome: nome,
         },
+        emailRedirectTo: redirectUrl, // Força o Supabase a usar a URL correta do EstudoHub
       },
     });
 
@@ -57,7 +61,6 @@ window.cadastrarUsuario = async function (email, senha, nome) {
     );
   }
 };
-
 // 2. FUNÇÃO DE LOGIN
 window.fazerLogin = async function (email, senha) {
   try {
